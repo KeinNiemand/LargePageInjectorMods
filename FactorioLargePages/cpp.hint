@@ -1,0 +1,2 @@
+#define FACTORIOLARGEPAGES_API __declspec(dllexport)
+#define FACTORIOLARGEPAGES_API __declspec(dllimport)
