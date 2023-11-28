@@ -1,34 +1,42 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <locale>
+#include <codecvt>
+#include <vector>
 
 #include <easyhook.h>
 
 int main(int argc, char* argv[])
 {
-	//DWORD processId;
-	//std::wcout << "Enter the target process Id: ";
-	//std::cin >> processId;
-
-	//DWORD freqOffset = 0;
-	//std::cout << "Enter a frequency offset in hertz (e.g. 800): ";
-	//std::cin >> freqOffset;
-
 	const WCHAR* dllToInject = L"MiMallocReplacer.dll";
-	//wprintf(L"Attempting to inject: %s\n\n", dllToInject);
 
-	// Inject dllToInject into the target process Id, passing 
-	// freqOffset as the pass through data.
+	// Calculate the total length required for the wchar_t array
+	int totalLength = 0;
+	for (int i = 1; i < argc; ++i) {
+		totalLength += MultiByteToWideChar(CP_UTF8, 0, argv[i], -1, NULL, 0);
+	}
+	totalLength += argc - 2; // For spaces and final null terminator
 
-	//NTSTATUS nt = RhInjectLibrary(
-	//	processId,   // The process to inject into
-	//	0,           // ThreadId to wake up upon injection
-	//	EASYHOOK_INJECT_DEFAULT,
-	//	dllToInject, // 32-bit
-	//	NULL,		 // 64-bit not provided
-	//	&freqOffset, // data to send to injected DLL entry point
-	//	sizeof(DWORD)// size of data to send
-	//);
+	// Allocate memory for the wchar_t array
+	wchar_t* combinedArgs = new wchar_t[totalLength];
+	wchar_t* currentPos = combinedArgs;
+
+	for (int i = 1; i < argc; ++i) {
+		// Convert and concatenate each argument
+		int converted = MultiByteToWideChar(CP_UTF8, 0, argv[i], -1, currentPos, totalLength - (currentPos - combinedArgs));
+		currentPos += converted - 1; // -1 to overwrite the null terminator
+
+		// Add a space between arguments, but not after the last one
+		if (i < argc - 1) {
+			*currentPos = L' ';
+			currentPos++;
+		}
+	}
+
+	// Null-terminate the string
+	*currentPos = L'\0';
+	
 
 	const WCHAR* exeName = L".\\stellaris.exe";
 	ULONG procIdVar = 0;
@@ -36,7 +44,7 @@ int main(int argc, char* argv[])
 
 	NTSTATUS nt = RhCreateAndInject(
 		(WCHAR*)exeName,
-		(WCHAR*)L"-gdpr-compliant",
+		combinedArgs,
 		HIGH_PRIORITY_CLASS, //Process Creation Options
 		EASYHOOK_INJECT_DEFAULT,
 		nullptr, //No 32bit dll
