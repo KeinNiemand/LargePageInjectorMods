@@ -147,6 +147,21 @@ void HookIfSigFound(std::string moduleName, MiMallocReplacedFunctions function, 
 
 }
 
+void HookAllMallocFunctions(const std::string& ModuleName) {
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::malloc, mi_malloc);
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::free, mi_free);
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::free_base, mi_free);
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::realloc, mi_realloc);
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::calloc, mi_calloc);
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::_strdup, mi_strdup);
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::_msize, mi_usable_size);
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::_recalloc, mi_recalloc);
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::_wcsdup, mi_wcsdup);
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::_aligned_malloc, mi_malloc_aligned);
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::_aligned_free, mi_free);
+	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::operator_new, mi_new);
+}
+
 extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteInfo)
 {
 	//Load Mimalloc redirect and ovveride, this automatically replaces malloc used here with mimalloc
@@ -164,18 +179,25 @@ extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteI
 	//mi_version();
 	// Perform hooking
 	mi_version();
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::malloc, mi_malloc);
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::free, mi_free);
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::free_base, mi_free);
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::realloc, mi_realloc);
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::calloc, mi_calloc);
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::_strdup, mi_strdup);
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::_msize, mi_usable_size);
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::_recalloc, mi_recalloc);
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::_wcsdup, mi_wcsdup);
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::_aligned_malloc, mi_malloc_aligned);
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::_aligned_free, mi_free);
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::operator_new, mi_new);
+	HookAllMallocFunctions("stellaris.exe");
+
+	//Most if not all of these are probably pointless since it's unlikely that diffrent dll have their own version of malloc
+	//It definitly works without this
+	//BUt just in case I'm trieing to overide these bunchh of random dll anyways
+	HookAllMallocFunctions("pops_api.dll");
+	HookAllMallocFunctions("pdx_red_king.dll");
+	HookAllMallocFunctions("d3d11.dll");
+	HookAllMallocFunctions("d3d9.dll");
+	HookAllMallocFunctions("D3DCompiler_47.dll");
+	HookAllMallocFunctions("D3X9_43.dll");
+	HookAllMallocFunctions("D3DCompiler_47.dll");
+	HookAllMallocFunctions("msvcpwin.dll");
+	HookAllMallocFunctions("msvcp110_win.dll");
+	HookAllMallocFunctions("msvcp140.dll");
+	HookAllMallocFunctions("msvcrt.dll");
+	HookAllMallocFunctions("ucrtbase.dll");
+	HookAllMallocFunctions("vcruntime_140.dll");
+	HookAllMallocFunctions("vcruntime_140_1.dll");
 	//HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::operator_new_nothrow, mi_new_nothrow); //Disabled Bad Signature
 
 
