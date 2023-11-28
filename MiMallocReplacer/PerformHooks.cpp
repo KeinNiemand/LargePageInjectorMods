@@ -163,7 +163,6 @@ extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteI
 
 	//mi_version();
 	// Perform hooking
-	Sleep(10000);
 	mi_version();
 	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::malloc, mi_malloc);
 	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::free, mi_free);
