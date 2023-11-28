@@ -56,10 +56,5 @@ int main(int argc, char* argv[])
 	{
 		std::wcout << L"Library injected successfully.\n";
 	}
-
-	std::wcout << "Press Enter to exit";
-	std::wstring input;
-	std::getline(std::wcin, input);
-	std::getline(std::wcin, input);
 	return 0;
 }
