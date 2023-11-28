@@ -198,7 +198,7 @@ extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteI
 	HookAllMallocFunctions("ucrtbase.dll");
 	HookAllMallocFunctions("vcruntime_140.dll");
 	HookAllMallocFunctions("vcruntime_140_1.dll");
-	//HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::operator_new_nothrow, mi_new_nothrow); //Disabled Bad Signature
+	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::operator_new_nothrow, mi_new_nothrow); //Disabled Bad Signature
 
 
 
