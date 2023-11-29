@@ -48,9 +48,9 @@ This mod uses the following third-party libraries:
 - **EasyHook**: [EasyHook GitHub](https://github.com/EasyHook/EasyHook)
 
 ### 3rd Party Licenses
-- **Mimalloc License**: [Add link to Mimalloc License]
-- **Sigmatch License**: [Add link to Sigmatch License]
-- **EasyHook License**: [Add link to EasyHook License]
+- **Mimalloc License**: [Add link to Mimalloc License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/MIMALLOC_LICENCE.txt)
+- **Sigmatch License**: [Add link to Sigmatch License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/sigmatch_LICENSE.txt)
+- **EasyHook License**: [Add link to EasyHook License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt)
 
 ## Compatibility
 This mod is primarily designed for Stellaris but has the potential to be adapted for other games. It is compatible with most Stellaris mods. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
