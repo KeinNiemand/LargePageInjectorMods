@@ -16,8 +16,8 @@ DLL (Dynamic Link Library) injection is a method used to run code within the add
 ## Performance Enhancement
 The LargePageInjectorMods can provide a substantial performance boost to your Stellaris gameplay:
 
-- **Standard Performance Increase**: Expect up to an 80%+ increase in game performance with the mod's basic installation.
-- **Enhanced Performance with Large Pages**: When enabled with Large Pages, the mod can deliver up to a 200% increase in performance, making for an even smoother and more responsive gaming experience.
+- **Standard Performance Increase**: Expect up to an ~~80%+ increase in game performance~~, probably wrong havn't tested again without large pages but with Large pages I only got 22.5%, and without it should be an even smaller increase.
+- **Enhanced Performance with Large Pages**: When enabled with Large Pages, the mod can deliver up to a ~~200% increase in performance~~ Probably wrong tested again and only got 22.5% performance improment, making for an even smoother and more responsive gaming experience.
 
 ### Additional Performance Settings
 Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further help with performance. This setting does not require enabling Large Pages and can be tested for its impact on the game. I have this enviourment variable set and have not tested the mod without it.
