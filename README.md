@@ -40,7 +40,7 @@ To enable Large Pages for further performance enhancement:
 3. **System Requirements and Recommendations**:
    - Large Pages might not work effectively if your system has less than 16GB of RAM.
    - For systems with 16GB of RAM: Setting the environment variable higher than 4 is not recommended. It may be necessary to restart your PC before launching the game and disable unnecessary auto-starts to ensure enough continuous RAM is available.
-   - For systems with 32GB of RAM or more: Setting the environment variable to 4 or 8 is recommended.
+   - For systems with 32GB of RAM or more: Setting the environment variable to 4-8 is recommended.
 
 Please note that memory fragmentation can be an issue if sufficient continuous RAM is not available.
 
@@ -56,7 +56,7 @@ This mod uses the following third-party libraries:
 - **EasyHook License**: [Add link to EasyHook License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt)
 
 ## Compatibility
-This mod is primarily designed for Stellaris but has the potential to be adapted for other games. It is compatible with most Stellaris mods. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
+This mod is primarily designed for Stellaris but has the potential to be adapted for other games. It is compatible with all Stellaris mods. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
 
 ## Contributing
 Contributions to the LargePageInjectorMods are welcome! If you have suggestions for improvements or bug fixes, feel free to fork this repository and submit a pull request.
