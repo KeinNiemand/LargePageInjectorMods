@@ -23,9 +23,12 @@ The LargePageInjectorMods can provide a substantial performance boost to your St
 Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further help with performance. This setting does not require enabling Large Pages and can be tested for its impact on the game. I have this enviourment variable set and have not tested the mod without it.
 
 ### Standard Installation
-1. **Download the Mod**: Download the ZIP file for your Stellaris launcher version from [releases page](https://github.com/KeinNiemand/LargePageInjectorMods/releases).
-2. **Locate Stellaris Directory**: Find the directory where Stellaris is installed (the same folder where `stellaris.exe` is located).
-3. **Extract Files**: Drag all the files from the downloaded ZIP file into the Stellaris installation folder. Click "Yes" to replace files if prompted.
+1. **Download the Mod**: Download the ZIP file for your Stellaris launcher version from [Releases Page](https://github.com/KeinNiemand/LargePageInjectorMods/releases).  
+   Disclaimer: Some Antivirus (including Windows Defender) may falsely detect Injector.exe to be maleware, this is a false positive caused becouse antiviruses see dll injection as suspious. You can read the source code and compile it yourself if you don't trust me.
+3. **Locate Stellaris Directory**: Find the directory where Stellaris is installed (the same folder where `stellaris.exe` is located).
+4. **Extract Files**: Drag all the files from the downloaded ZIP file into the Stellaris installation folder. Click "Yes" to replace files if prompted.
+5. **Run the game normally** Run the game normally, the included launcher-settings.json configures the paradox launcher to run the Injector which then runs the game. If succefull the game it will take a few extra seconds for the game to open and you will hear a short beep before the game opens to indicate success.
+   If you for some reason want to run the game without the paradox launcher you can alternativly run Injector.exe with some command line argument (currently there a bug in the way the injector parses and passes trough arguments that makes it not work if there are no command line args this will be fixed in the next release).
 
 
 ### Advanced Installation for Large Pages
