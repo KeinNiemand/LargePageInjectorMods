@@ -23,7 +23,7 @@ The LargePageInjectorMods can provide a substantial performance boost to your St
 Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further help with performance. This setting does not require enabling Large Pages and can be tested for its impact on the game. I have this enviourment variable set and have not tested the mod without it.
 
 ### Standard Installation
-1. **Download the Mod**: Download the ZIP file for your Stellaris launcher version from [insert link to releases page].
+1. **Download the Mod**: Download the ZIP file for your Stellaris launcher version from [releases page](https://github.com/KeinNiemand/LargePageInjectorMods/releases).
 2. **Locate Stellaris Directory**: Find the directory where Stellaris is installed (the same folder where `stellaris.exe` is located).
 3. **Extract Files**: Drag all the files from the downloaded ZIP file into the Stellaris installation folder. Click "Yes" to replace files if prompted.
 
