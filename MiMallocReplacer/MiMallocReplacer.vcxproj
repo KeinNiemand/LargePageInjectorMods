@@ -169,11 +169,15 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="Mallocsigmatch.hpp" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Mallocsigmatch.cpp" />
     <ClCompile Include="PerformHooks.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MiMallocReplacer.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

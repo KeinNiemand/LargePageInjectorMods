@@ -137,6 +137,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Injector.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\EasyHookNativePackage.redist.2.7.7097\build\native\EasyHookNativePackage.redist.targets" Condition="Exists('..\packages\EasyHookNativePackage.redist.2.7.7097\build\native\EasyHookNativePackage.redist.targets')" />

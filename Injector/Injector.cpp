@@ -7,35 +7,35 @@
 
 #include <easyhook.h>
 
-int main(int argc, char* argv[])
+int wmain(int argc, wchar_t* argv[])
 {
 	const WCHAR* dllToInject = L"MiMallocReplacer.dll";
 
-	// Calculate the total length required for the wchar_t array
-	int totalLength = 0;
-	for (int i = 1; i < argc; ++i) {
-		totalLength += MultiByteToWideChar(CP_UTF8, 0, argv[i], -1, NULL, 0);
-	}
-	totalLength += argc - 2; // For spaces and final null terminator
+	//// Calculate the total length required for the wchar_t array
+	//int totalLength = 0;
+	//for (int i = 1; i < argc; ++i) {
+	//	totalLength += MultiByteToWideChar(CP_UTF8, 0, argv[i], -1, NULL, 0);
+	//}
+	//totalLength += argc - 2; // For spaces and final null terminator
 
-	// Allocate memory for the wchar_t array
-	wchar_t* combinedArgs = new wchar_t[totalLength];
-	wchar_t* currentPos = combinedArgs;
+	//// Allocate memory for the wchar_t array
+	//wchar_t* combinedArgs = new wchar_t[totalLength];
+	//wchar_t* currentPos = combinedArgs;
 
-	for (int i = 1; i < argc; ++i) {
-		// Convert and concatenate each argument
-		int converted = MultiByteToWideChar(CP_UTF8, 0, argv[i], -1, currentPos, totalLength - (currentPos - combinedArgs));
-		currentPos += converted - 1; // -1 to overwrite the null terminator
+	//for (int i = 1; i < argc; ++i) {
+	//	// Convert and concatenate each argument
+	//	int converted = MultiByteToWideChar(CP_UTF8, 0, argv[i], -1, currentPos, totalLength - (currentPos - combinedArgs));
+	//	currentPos += converted - 1; // -1 to overwrite the null terminator
 
-		// Add a space between arguments, but not after the last one
-		if (i < argc - 1) {
-			*currentPos = L' ';
-			currentPos++;
-		}
-	}
+	//	// Add a space between arguments, but not after the last one
+	//	if (i < argc - 1) {
+	//		*currentPos = L' ';
+	//		currentPos++;
+	//	}
+	//}
 
-	// Null-terminate the string
-	*currentPos = L'\0';
+	//// Null-terminate the string
+	//*currentPos = L'\0';
 	
 
 	const WCHAR* exeName = L".\\stellaris.exe";
@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 
 	NTSTATUS nt = RhCreateAndInject(
 		(WCHAR*)exeName,
-		combinedArgs,
+		*argv,
 		HIGH_PRIORITY_CLASS, //Process Creation Options
 		EASYHOOK_INJECT_DEFAULT,
 		nullptr, //No 32bit dll
