@@ -27,8 +27,8 @@ Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further 
    Disclaimer: Some Antivirus (including Windows Defender) may falsely detect Injector.exe to be maleware, this is a false positive caused becouse antiviruses see dll injection as suspious. You can read the source code and compile it yourself if you don't trust me.
 3. **Locate Stellaris Directory**: Find the directory where Stellaris is installed (the same folder where `stellaris.exe` is located).
 4. **Extract Files**: Drag all the files from the downloaded ZIP file into the Stellaris installation folder. Click "Yes" to replace files if prompted.
-5. **Run the game normally** Run the game normally, the included launcher-settings.json configures the paradox launcher to run the Injector which then runs the game. If succefull the game it will take a few extra seconds for the game to open and you will hear a short beep before the game opens to indicate success.
-   If you for some reason want to run the game without the paradox launcher you can alternativly run Injector.exe with some command line argument (currently there a bug in the way the injector parses and passes trough arguments that makes it not work if there are no command line args this will be fixed in the next release).
+5. **Run the game normally** Run the game normally, the included launcher-settings.json configures the paradox launcher to run the Injector which then runs the game. If succefull the game it will take a few extra seconds for the game to open and you will hear a short beep before the game opens to indicate success. Please not that you might need to replace the launcher-config.json file again if the game updates.
+   Alternatilvy you can run Injector.exe directly.
 
 
 ### Advanced Installation for Large Pages
