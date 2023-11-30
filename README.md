@@ -16,16 +16,19 @@ DLL (Dynamic Link Library) injection is a method used to run code within the add
 ## Performance Enhancement
 The LargePageInjectorMods can provide a substantial performance boost to your Stellaris gameplay:
 
-- **Standard Performance Increase**: Expect up to an 80%+ increase in game performance with the mod's basic installation.
-- **Enhanced Performance with Large Pages**: When enabled with Large Pages, the mod can deliver up to a 200% increase in performance, making for an even smoother and more responsive gaming experience.
+- **Standard Performance Increase**: Expect up to an ~~80%+ increase in game performance~~, probably wrong havn't tested again without large pages but with Large pages I only got 22.5%, and without it should be an even smaller increase.
+- **Enhanced Performance with Large Pages**: When enabled with Large Pages, the mod can deliver up to a ~~200% increase in performance~~ Probably wrong tested again and only got 22.5% performance improment, making for an even smoother and more responsive gaming experience.
 
 ### Additional Performance Settings
 Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further help with performance. This setting does not require enabling Large Pages and can be tested for its impact on the game. I have this enviourment variable set and have not tested the mod without it.
 
 ### Standard Installation
-1. **Download the Mod**: Download the ZIP file for your Stellaris launcher version from [insert link to releases page].
-2. **Locate Stellaris Directory**: Find the directory where Stellaris is installed (the same folder where `stellaris.exe` is located).
-3. **Extract Files**: Drag all the files from the downloaded ZIP file into the Stellaris installation folder. Click "Yes" to replace files if prompted.
+1. **Download the Mod**: Download the ZIP file for your Stellaris launcher version from [Releases Page](https://github.com/KeinNiemand/LargePageInjectorMods/releases).  
+   Disclaimer: Some Antivirus (including Windows Defender) may falsely detect Injector.exe to be maleware, this is a false positive caused becouse antiviruses see dll injection as suspious. You can read the source code and compile it yourself if you don't trust me.
+3. **Locate Stellaris Directory**: Find the directory where Stellaris is installed (the same folder where `stellaris.exe` is located).
+4. **Extract Files**: Drag all the files from the downloaded ZIP file into the Stellaris installation folder. Click "Yes" to replace files if prompted.
+5. **Run the game normally** Run the game normally, the included launcher-settings.json configures the paradox launcher to run the Injector which then runs the game. If succefull the game it will take a few extra seconds for the game to open and you will hear a short beep before the game opens to indicate success.
+   If you for some reason want to run the game without the paradox launcher you can alternativly run Injector.exe with some command line argument (currently there a bug in the way the injector parses and passes trough arguments that makes it not work if there are no command line args this will be fixed in the next release).
 
 
 ### Advanced Installation for Large Pages
@@ -37,7 +40,7 @@ To enable Large Pages for further performance enhancement:
 3. **System Requirements and Recommendations**:
    - Large Pages might not work effectively if your system has less than 16GB of RAM.
    - For systems with 16GB of RAM: Setting the environment variable higher than 4 is not recommended. It may be necessary to restart your PC before launching the game and disable unnecessary auto-starts to ensure enough continuous RAM is available.
-   - For systems with 32GB of RAM or more: Setting the environment variable to 4 or 8 is recommended.
+   - For systems with 32GB of RAM or more: Setting the environment variable to 4-8 is recommended.
 
 Please note that memory fragmentation can be an issue if sufficient continuous RAM is not available.
 
@@ -53,7 +56,7 @@ This mod uses the following third-party libraries:
 - **EasyHook License**: [Add link to EasyHook License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt)
 
 ## Compatibility
-This mod is primarily designed for Stellaris but has the potential to be adapted for other games. It is compatible with most Stellaris mods. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
+This mod is primarily designed for Stellaris but has the potential to be adapted for other games. It is compatible with all Stellaris mods. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
 
 ## Contributing
 Contributions to the LargePageInjectorMods are welcome! If you have suggestions for improvements or bug fixes, feel free to fork this repository and submit a pull request.
