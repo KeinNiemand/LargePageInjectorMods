@@ -16,11 +16,13 @@ DLL (Dynamic Link Library) injection is a method used to run code within the add
 ## Performance Enhancement
 The LargePageInjectorMods can provide a substantial performance boost to your Stellaris gameplay:
 
-- **Standard Performance Increase**: Expect up to an ~~80%+ increase in game performance~~, probably wrong havn't tested again without large pages but with Large pages I only got 22.5%, and without it should be an even smaller increase.
-- **Enhanced Performance with Large Pages**: When enabled with Large Pages, the mod can deliver up to a ~~200% increase in performance~~ Probably wrong tested again and only got 22.5% performance improment, making for an even smoother and more responsive gaming experience.
+- **Standard Performance Increase**: Small performance increase of 4-5%, could be completly negligible or significantly larger depending on circumstances.
+- **Enhanced Performance with Large Pages**: When enabled with Large Pages, the mod can deliver a 10-80%+ Performance Increase.
+  
+- Please note that the performance increase can varry dratically based on your save (Performanc increase should be bigger the later in the game you are and the heavier the save is), your hardware(generally there bigger performacne gains on weaker hardware), what mods your using and more. Your performance gains may me significantly smaller or larger then anything mentioned above. Somone with weaker hardware did report getting an 80% Performance increase so large gains are not impossible.
 
 ### Additional Performance Settings
-Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further help with performance. This setting does not require enabling Large Pages and can be tested for its impact on the game. I have this enviourment variable set and have not tested the mod without it.
+Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further help with performance. This setting does not require enabling Large Pages and can be tested for its impact on the game. I have this enviourment variable set and have not tested the mod without it, it might do nothing to help performance but it's unlikly that it hurts performance.
 
 ### Standard Installation
 1. **Download the Mod**: Download the ZIP file for your Stellaris launcher version from [Releases Page](https://github.com/KeinNiemand/LargePageInjectorMods/releases).  
