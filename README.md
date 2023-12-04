@@ -53,7 +53,7 @@ The config File has to be called LargePageInjectorMods.config, sample configs ar
 The first line in the config it the name of the exe file that the Injector runs.
 
 All other lines in the config are the modules that malloc should get replaced in, normally the second line should be the same as the first line so malloc get's replaced with mimalloc in the game/application itself.  
-After that should be list all dlls (one per line) that malloc should be replaced in, since it's not easy to find out what dlls have their own internall malloc you can try manually adding the dlls the game loads and remove any that cause crashes when launching, if a dll dosn't have an internal malloc it will just be ignored unless something else has a conflicting signature (unlikley) so adding a bunch of random dll shoudn't be a problem.
+After that should be list all dlls (one per line) that malloc should be replaced in, since it's not easy to find out what dlls have their own internall malloc you can try manually adding the dlls the game loads and remove any that cause crashes when launching, if a dll dosn't have an internal malloc it will just be ignored unless something else has a conflicting signature (unlikley) so adding a bunch of random dll shoudn't be a problem. You probably should't add the dlls that come with this mod.
 
 Contributions for working config files for other games/application are welcome.
  
