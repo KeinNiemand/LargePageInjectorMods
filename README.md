@@ -45,17 +45,6 @@ To enable Large Pages for further performance enhancement:
    - For systems with 32GB of RAM or more: Setting the environment variable to 4-8 is recommended.
 
 Please note that memory fragmentation can be an issue if sufficient continuous RAM is not available.
-
-## Config Format
-
-The config File has to be called LargePageInjectorMods.config, sample configs are provided [here](https://github.com/KeinNiemand/LargePageInjectorMods/tree/master/configs), to use a sample config you have to rename it. The config file has to be in the same folder as Injector.exe and the game/application that get's launched.  
-
-The first line in the config it the name of the exe file that the Injector runs.
-
-All other lines in the config are the modules that malloc should get replaced in, normally the second line should be the same as the first line so malloc get's replaced with mimalloc in the game/application itself.  
-After that should be list all dlls (one per line) that malloc should be replaced in, since it's not easy to find out what dlls have their own internall malloc you can try manually adding the dlls the game loads and remove any that cause crashes when launching, if a dll dosn't have an internal malloc it will just be ignored unless something else has a conflicting signature (unlikley) so adding a bunch of random dll shoudn't be a problem. You probably should't add the dlls that come with this mod.
-
-Contributions for working config files for other games/application are welcome.
  
 ## Third-Party Libraries
 This mod uses the following third-party libraries:
@@ -71,6 +60,17 @@ This mod uses the following third-party libraries:
 ## Compatibility
 This mod is primarily designed for Stellaris and Factorio but might also work for other games provided they are 64 bit native apllicatiions. Bug Reports for unsupported Games/Apllication while mostly welcome will likely be ignored since it's very unliekly that this will work for everything.
 It is compatible with all Stellaris/Factorio mods. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
+
+## Config Format
+
+The config File has to be called LargePageInjectorMods.config, sample configs are provided [here](https://github.com/KeinNiemand/LargePageInjectorMods/tree/master/configs), to use a sample config you have to rename it. The config file has to be in the same folder as Injector.exe and the game/application that get's launched.  
+
+The first line in the config it the name of the exe file that the Injector runs.
+
+All other lines in the config are the modules that malloc should get replaced in, normally the second line should be the same as the first line so malloc get's replaced with mimalloc in the game/application itself.  
+After that should be list all dlls (one per line) that malloc should be replaced in, since it's not easy to find out what dlls have their own internall malloc you can try manually adding the dlls the game loads and remove any that cause crashes when launching, if a dll dosn't have an internal malloc it will just be ignored unless something else has a conflicting signature (unlikley) so adding a bunch of random dll shoudn't be a problem. You probably should't add the dlls that come with this mod.
+
+Contributions for working config files for other games/application are welcome.
 
 ## Contributing
 Contributions to the LargePageInjectorMods are welcome! If you have suggestions for improvements or bug fixes, feel free to fork this repository and submit a pull request.
