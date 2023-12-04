@@ -1,44 +1,17 @@
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <locale>
-#include <codecvt>
+import Configuration;
 #include <vector>
-
+#include <iostream>
 #include <easyhook.h>
 
 int wmain(int argc, wchar_t* argv[])
 {
 	const WCHAR* dllToInject = L"MiMallocReplacer.dll";
 
-	//// Calculate the total length required for the wchar_t array
-	//int totalLength = 0;
-	//for (int i = 1; i < argc; ++i) {
-	//	totalLength += MultiByteToWideChar(CP_UTF8, 0, argv[i], -1, NULL, 0);
-	//}
-	//totalLength += argc - 2; // For spaces and final null terminator
+	//Load config
+	Configuration config;
+	config.loadFromFile(".\\LargePageInjectorMods.config");
 
-	//// Allocate memory for the wchar_t array
-	//wchar_t* combinedArgs = new wchar_t[totalLength];
-	//wchar_t* currentPos = combinedArgs;
-
-	//for (int i = 1; i < argc; ++i) {
-	//	// Convert and concatenate each argument
-	//	int converted = MultiByteToWideChar(CP_UTF8, 0, argv[i], -1, currentPos, totalLength - (currentPos - combinedArgs));
-	//	currentPos += converted - 1; // -1 to overwrite the null terminator
-
-	//	// Add a space between arguments, but not after the last one
-	//	if (i < argc - 1) {
-	//		*currentPos = L' ';
-	//		currentPos++;
-	//	}
-	//}
-
-	//// Null-terminate the string
-	//*currentPos = L'\0';
-	
-
-	const WCHAR* exeName = L".\\stellaris.exe";
+	const WCHAR* exeName = config.LaunchPath.c_str();
 	ULONG procIdVar = 0;
 	ULONG* procId = &procIdVar;
 

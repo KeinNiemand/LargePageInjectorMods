@@ -5,6 +5,8 @@
 #include <mimalloc.h>
 #include <mimalloc-new-delete.h>
 
+import Configuration;
+
 //DWORD gFreqOffset = 0;
 //BOOL WINAPI myBeepHook(DWORD dwFreq, DWORD dwDuration)
 //{
@@ -130,40 +132,37 @@ void HookAllMallocFunctions(const std::string& ModuleName) {
 
 extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteInfo)
 {
-	//Load Mimalloc redirect and ovveride, this automatically replaces malloc used here with mimalloc
-	//LoadLibrary(L"mimalloc-redirect.dll");
-	//LoadLibrary(L"mimalloc-override.dll");
 
-	//std::wstring	printToConsole(L"Injected by process Id: "inRemoteInfo->HostPID)  L"\n");
-	//std::cout << "Passed in data size: " << inRemoteInfo->UserDataSize << "\n";
-	//if (inRemoteInfo->UserDataSize == sizeof(DWORD))
-	//{
-	//	gFreqOffset = *reinterpret_cast<DWORD*>(inRemoteInfo->UserData);
-	//	std::cout << "Adjusting Beep frequency by: " << gFreqOffset << "\n";
-	//}
-
-	//mi_version();
-	// Perform hooking
+	//mi_version() to intilse mi malloc.
 	mi_version();
+
+	//Load configuration
+	Configuration config;
+
+	config.loadFromFile(".\\LargePageInjectorMods.config");
+
+	for (auto moduleName : config.modulesToPatch) {
+		HookAllMallocFunctions(moduleName);
+	}
+
 	HookAllMallocFunctions("stellaris.exe");
 
 	//Most if not all of these are probably pointless since it's unlikely that diffrent dll have their own version of malloc
 	//It definitly works without this
 	//BUt just in case I'm trieing to overide these bunchh of random dll anyways
-	HookAllMallocFunctions("pops_api.dll");
-	HookAllMallocFunctions("pdx_red_king.dll");
-	HookAllMallocFunctions("d3d11.dll");
-	HookAllMallocFunctions("d3d9.dll");
-	HookAllMallocFunctions("D3DCompiler_47.dll");
-	HookAllMallocFunctions("D3X9_43.dll");
-	HookAllMallocFunctions("D3DCompiler_47.dll");
-	HookAllMallocFunctions("msvcpwin.dll");
-	HookAllMallocFunctions("msvcp110_win.dll");
-	HookAllMallocFunctions("msvcp140.dll");
-	HookAllMallocFunctions("msvcrt.dll");
-	HookAllMallocFunctions("ucrtbase.dll");
-	HookAllMallocFunctions("vcruntime_140.dll");
-	HookAllMallocFunctions("vcruntime_140_1.dll");
+	//HookAllMallocFunctions("pops_api.dll");
+	//HookAllMallocFunctions("pdx_red_king.dll");
+	//HookAllMallocFunctions("d3d11.dll");
+	//HookAllMallocFunctions("d3d9.dll");
+	//HookAllMallocFunctions("D3DCompiler_47.dll");
+	//HookAllMallocFunctions("D3X9_43.dll");
+	//HookAllMallocFunctions("msvcpwin.dll");
+	//HookAllMallocFunctions("msvcp110_win.dll");
+	//HookAllMallocFunctions("msvcp140.dll");
+	//HookAllMallocFunctions("msvcrt.dll");
+	//HookAllMallocFunctions("ucrtbase.dll");
+	//HookAllMallocFunctions("vcruntime_140.dll");
+	//HookAllMallocFunctions("vcruntime_140_1.dll");
 	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::operator_new_nothrow, mi_new_nothrow); //Disabled Bad Signature
 
 

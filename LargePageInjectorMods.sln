@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MiMallocReplacer", "MiMallo
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Injector", "Injector\Injector.vcxproj", "{84BFE50A-4B97-4C09-BA53-D8497CE69A55}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SharedCode", "SharedCode\SharedCode.vcxproj", "{9AED6D33-21D7-4B20-B8D4-9B058E529E69}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{84BFE50A-4B97-4C09-BA53-D8497CE69A55}.Release|x64.Build.0 = Release|x64
 		{84BFE50A-4B97-4C09-BA53-D8497CE69A55}.Release|x86.ActiveCfg = Release|Win32
 		{84BFE50A-4B97-4C09-BA53-D8497CE69A55}.Release|x86.Build.0 = Release|Win32
+		{9AED6D33-21D7-4B20-B8D4-9B058E529E69}.Debug|x64.ActiveCfg = Debug|x64
+		{9AED6D33-21D7-4B20-B8D4-9B058E529E69}.Debug|x64.Build.0 = Debug|x64
+		{9AED6D33-21D7-4B20-B8D4-9B058E529E69}.Debug|x86.ActiveCfg = Debug|Win32
+		{9AED6D33-21D7-4B20-B8D4-9B058E529E69}.Debug|x86.Build.0 = Debug|Win32
+		{9AED6D33-21D7-4B20-B8D4-9B058E529E69}.Release|x64.ActiveCfg = Release|x64
+		{9AED6D33-21D7-4B20-B8D4-9B058E529E69}.Release|x64.Build.0 = Release|x64
+		{9AED6D33-21D7-4B20-B8D4-9B058E529E69}.Release|x86.ActiveCfg = Release|Win32
+		{9AED6D33-21D7-4B20-B8D4-9B058E529E69}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
