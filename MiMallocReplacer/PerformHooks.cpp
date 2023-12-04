@@ -101,7 +101,7 @@ void InstallHook(void* func2hook, void* payloadFunction)
 
 void HookIfSigFound(std::string moduleName, MiMallocReplacedFunctions function, void* replacementFunctionPointer) {
 	mallocsigmatch sigmatcher;
-	std::vector<void*> functionAdresses = sigmatcher.GetFunctionAdress("stellaris.exe", function);
+	std::vector<void*> functionAdresses = sigmatcher.GetFunctionAdress(moduleName, function);
 
 	for (void* functionAdress : functionAdresses) {
 		if (functionAdress) {
@@ -144,29 +144,6 @@ extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteI
 	for (auto moduleName : config.modulesToPatch) {
 		HookAllMallocFunctions(moduleName);
 	}
-
-	HookAllMallocFunctions("stellaris.exe");
-
-	//Most if not all of these are probably pointless since it's unlikely that diffrent dll have their own version of malloc
-	//It definitly works without this
-	//BUt just in case I'm trieing to overide these bunchh of random dll anyways
-	//HookAllMallocFunctions("pops_api.dll");
-	//HookAllMallocFunctions("pdx_red_king.dll");
-	//HookAllMallocFunctions("d3d11.dll");
-	//HookAllMallocFunctions("d3d9.dll");
-	//HookAllMallocFunctions("D3DCompiler_47.dll");
-	//HookAllMallocFunctions("D3X9_43.dll");
-	//HookAllMallocFunctions("msvcpwin.dll");
-	//HookAllMallocFunctions("msvcp110_win.dll");
-	//HookAllMallocFunctions("msvcp140.dll");
-	//HookAllMallocFunctions("msvcrt.dll");
-	//HookAllMallocFunctions("ucrtbase.dll");
-	//HookAllMallocFunctions("vcruntime_140.dll");
-	//HookAllMallocFunctions("vcruntime_140_1.dll");
-	HookIfSigFound("stellaris.exe", MiMallocReplacedFunctions::operator_new_nothrow, mi_new_nothrow); //Disabled Bad Signature
-
-
-
 	
 	//Let the game run
 	Beep(1000, 100);
