@@ -1,8 +1,9 @@
 
-# LargePageInjectorMods for Stellaris, Factorio and More
+# LargePageInjectorMods for Stellaris and More
 
 ## Introduction
-Welcome to the LargePageInjectorMods for Stellaris! This mod significantly enhances Stellaris's or other Games/Applications performance by optimizing its memory management.
+Welcome to the LargePageInjectorMods! This mod significantly enhances Stellaris's or other Games/Applications performance by optimizing its memory management.  
+Support for other games/application is highly expermimental and untested and may not work.
 
 ### What is a Memory Allocator?
 A memory allocator is a software component responsible for managing the allocation and deallocation of memory during a program's execution. Efficient memory allocation is crucial in games like Stellaris, as it can lead to smoother performance and faster load times. By using a more efficient allocator, such as the one introduced in this mod, the game's performance can be noticeably improved.
@@ -30,7 +31,7 @@ Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further 
 3. **Locate Stellaris Directory**: Find the directory where Stellaris is installed (the same folder where `stellaris.exe` is located).
 4. **Extract Files**: Drag all the files from the downloaded ZIP file into the Stellaris installation folder. Click "Yes" to replace files if prompted.
 5. **Stellaris** Run the game normally, the included launcher-settings.json configures the paradox launcher to run the Injector which then runs the game. If succefull the game it will take a few extra seconds for the game to open and you will hear a short beep before the game opens to indicate success. Please not that you might need to replace the launcher-config.json file again if the game updates.
-   **Other Games or Stellaris** Run Injector.exe instead of starting the game.
+   **Other Games** Run Injector.exe instead of starting the game.
 
 
 ### Advanced Installation for Large Pages
@@ -58,7 +59,7 @@ This mod uses the following third-party libraries:
 - **EasyHook License**: [Add link to EasyHook License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt)
 
 ## Compatibility
-This mod is primarily designed for Stellaris and Factorio but might also work for other games provided they are 64 bit native apllicatiions. Bug Reports for unsupported Games/Apllication while mostly welcome will likely be ignored since it's very unliekly that this will work for everything.
+This mod is primarily designed for Stellaris but might also work for other games provided they are 64 bit native apllicatiions. Bug Reports for unsupported Games/Apllication while mostly welcome will likely be ignored since it's very unliekly that this will work for everything.
 It is compatible with all Stellaris/Factorio mods. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
 
 ## Config Format
@@ -70,8 +71,8 @@ The first line in the config it the name of the exe file that the Injector runs.
 All other lines in the config are the modules that malloc should get replaced in, normally the second line should be the same as the first line so malloc get's replaced with mimalloc in the game/application itself.  
 After that should be list all dlls (one per line) that malloc should be replaced in, since it's not easy to find out what dlls have their own internall malloc you can try manually adding the dlls the game loads and remove any that cause crashes when launching, if a dll dosn't have an internal malloc it will just be ignored unless something else has a conflicting signature (unlikley) so adding a bunch of random dll shoudn't be a problem. You probably should't add the dlls that come with this mod.
 
-Contributions for working config files for other games/application are welcome.
-
+Contributions for working config files for other games/application are welcome. The game launching tr Injector.exe is no guarantee that it worked, if malloc is not found in the game/application it will just launch normally, make 
+sure that mimalloc is actually beeing used and that performance increases.
 ## Contributing
 Contributions to the LargePageInjectorMods are welcome! If you have suggestions for improvements or bug fixes, feel free to fork this repository and submit a pull request.
 
