@@ -50,7 +50,7 @@ Please note that memory fragmentation can be an issue if sufficient continuous R
 
 The config File has to be called LargePageInjectorMods.config, sample configs are provided [here](https://github.com/KeinNiemand/LargePageInjectorMods/tree/master/configs), to use a sample config you have to rename it. The config file has to be in the same folder as Injector.exe and the game/application that get's launched.  
 
-The first line in the config it the name of the exe file that the Injector Launcher.
+The first line in the config it the name of the exe file that the Injector runs.
 
 All other lines in the config are the modules that malloc should get replaced in, normally the second line should be the same as the first line so malloc get's replaced with mimalloc in the game/application itself.  
 Beyond the second line should be all dll that contan a version of malloc that has to be replaced with mimalloc, however since that is not something that you can easly figure out you can just add every dll the game/application loads one by one and remove any that crash on launch when added, if the malloc is not found in a listed dll it will simply be ignored and not patched.
