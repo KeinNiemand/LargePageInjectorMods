@@ -46,7 +46,7 @@ To enable Large Pages for further performance enhancement:
 
 Please note that memory fragmentation can be an issue if sufficient continuous RAM is not available.
 
-### Config Format (How to get this to work with other games/applications)
+## Config Format
 
 The config File has to be called LargePageInjectorMods.config, sample configs are provided [here](https://github.com/KeinNiemand/LargePageInjectorMods/tree/master/configs), to use a sample config you have to rename it. The config file has to be in the same folder as Injector.exe and the game/application that get's launched.  
 
@@ -54,6 +54,8 @@ The first line in the config it the name of the exe file that the Injector Launc
 
 All other lines in the config are the modules that malloc should get replaced in, normally the second line should be the same as the first line so malloc get's replaced with mimalloc in the game/application itself.  
 Beyond the second line should be all dll that contan a version of malloc that has to be replaced with mimalloc, however since that is not something that you can easly figure out you can just add every dll the game/application loads one by one and remove any that crash on launch when added, if the malloc is not found in a listed dll it will simply be ignored and not patched.
+
+Contributions for working config files for other games/application are welcome.
  
 ## Third-Party Libraries
 This mod uses the following third-party libraries:
@@ -67,7 +69,7 @@ This mod uses the following third-party libraries:
 - **EasyHook License**: [Add link to EasyHook License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt)
 
 ## Compatibility
-This mod is primarily designed for Stellaris and Factorio but might also work for other games provided they are 64 bit native apllicatiions.
+This mod is primarily designed for Stellaris and Factorio but might also work for other games provided they are 64 bit native apllicatiions. Bug Reports for unsupported Games/Apllication while mostly welcome will likely be ignored since it's very unliekly that this will work for everything.
 It is compatible with all Stellaris/Factorio mods. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
 
 ## Contributing
