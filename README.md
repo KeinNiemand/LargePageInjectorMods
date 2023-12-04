@@ -1,8 +1,8 @@
 
-# LargePageInjectorMods for Stellaris
+# LargePageInjectorMods for Stellaris, Factorio and More
 
 ## Introduction
-Welcome to the LargePageInjectorMods for Stellaris! This mod significantly enhances Stellaris's performance by optimizing its memory management.
+Welcome to the LargePageInjectorMods for Stellaris! This mod significantly enhances Stellaris's or other Games/Applications performance by optimizing its memory management.
 
 ### What is a Memory Allocator?
 A memory allocator is a software component responsible for managing the allocation and deallocation of memory during a program's execution. Efficient memory allocation is crucial in games like Stellaris, as it can lead to smoother performance and faster load times. By using a more efficient allocator, such as the one introduced in this mod, the game's performance can be noticeably improved.
@@ -14,7 +14,7 @@ A memory allocator is a software component responsible for managing the allocati
 DLL (Dynamic Link Library) injection is a method used to run code within the address space of another process by forcing it to load a dynamic-link library. In the LargePageInjectorMods, we utilize DLL injection to seamlessly replace Stellaris's default memory allocator with `mimalloc`, without the need for modifications to the game's executable files.
 
 ## Performance Enhancement
-The LargePageInjectorMods can provide a substantial performance boost to your Stellaris gameplay:
+The LargePageInjectorMods can provide a substantial performance boost (Performance only tested for Stellaris):
 
 - **Standard Performance Increase**: Small performance increase of 4-5%, could be completly negligible or significantly larger depending on circumstances.
 - **Enhanced Performance with Large Pages**: When enabled with Large Pages, the mod can deliver a 5-80%+ Performance Increase.
@@ -25,12 +25,12 @@ The LargePageInjectorMods can provide a substantial performance boost to your St
 Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further help with performance. This setting does not require enabling Large Pages and can be tested for its impact on the game. I have this enviourment variable set and have not tested the mod without it, it might do nothing to help performance but it's unlikly that it hurts performance.
 
 ### Standard Installation
-1. **Download the Mod**: Download the ZIP file for your Stellaris launcher version from [Releases Page](https://github.com/KeinNiemand/LargePageInjectorMods/releases).  
+1. **Download the Mod**: Download the ZIP file for your Game/Game version from [Releases Page](https://github.com/KeinNiemand/LargePageInjectorMods/releases).  
    Disclaimer: Some Antivirus (including Windows Defender) may falsely detect Injector.exe to be maleware, this is a false positive caused becouse antiviruses see dll injection as suspious. You can read the source code and compile it yourself if you don't trust me.
 3. **Locate Stellaris Directory**: Find the directory where Stellaris is installed (the same folder where `stellaris.exe` is located).
 4. **Extract Files**: Drag all the files from the downloaded ZIP file into the Stellaris installation folder. Click "Yes" to replace files if prompted.
-5. **Run the game normally** Run the game normally, the included launcher-settings.json configures the paradox launcher to run the Injector which then runs the game. If succefull the game it will take a few extra seconds for the game to open and you will hear a short beep before the game opens to indicate success. Please not that you might need to replace the launcher-config.json file again if the game updates.
-   Alternatilvy you can run Injector.exe directly.
+5. **Stellaris** Run the game normally, the included launcher-settings.json configures the paradox launcher to run the Injector which then runs the game. If succefull the game it will take a few extra seconds for the game to open and you will hear a short beep before the game opens to indicate success. Please not that you might need to replace the launcher-config.json file again if the game updates.
+   **Other Games or Stellaris** Run Injector.exe instead of starting the game.
 
 
 ### Advanced Installation for Large Pages
@@ -46,6 +46,15 @@ To enable Large Pages for further performance enhancement:
 
 Please note that memory fragmentation can be an issue if sufficient continuous RAM is not available.
 
+### Config Format (How to get this to work with other games/applications)
+
+The config File has to be called LargePageInjectorMods.config, sample configs are provided [here](https://github.com/KeinNiemand/LargePageInjectorMods/tree/master/configs), to use a sample config you have to rename it. The config file has to be in the same folder as Injector.exe and the game/application that get's launched.  
+
+The first line in the config it the name of the exe file that the Injector Launcher.
+
+All other lines in the config are the modules that malloc should get replaced in, normally the second line should be the same as the first line so malloc get's replaced with mimalloc in the game/application itself.  
+Beyond the second line should be all dll that contan a version of malloc that has to be replaced with mimalloc, however since that is not something that you can easly figure out you can just add every dll the game/application loads one by one and remove any that crash on launch when added, if the malloc is not found in a listed dll it will simply be ignored and not patched.
+ 
 ## Third-Party Libraries
 This mod uses the following third-party libraries:
 - **Mimalloc**: [Mimalloc GitHub](https://github.com/microsoft/mimalloc)
@@ -58,7 +67,8 @@ This mod uses the following third-party libraries:
 - **EasyHook License**: [Add link to EasyHook License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt)
 
 ## Compatibility
-This mod is primarily designed for Stellaris but has the potential to be adapted for other games. It is compatible with all Stellaris mods. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
+This mod is primarily designed for Stellaris and Factorio but might also work for other games provided they are 64 bit native apllicatiions.
+It is compatible with all Stellaris/Factorio mods. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
 
 ## Contributing
 Contributions to the LargePageInjectorMods are welcome! If you have suggestions for improvements or bug fixes, feel free to fork this repository and submit a pull request.
