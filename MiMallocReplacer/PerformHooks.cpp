@@ -16,40 +16,6 @@
 // DLL injection will fail.
 extern "C" void __declspec(dllexport) __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO * inRemoteInfo);
 
-//Old function using easy hook for the actual hooking dosn't work for free_base
-//void PerformHook(void* adress, void* hookFunction)
-//{
-//	HOOK_TRACE_INFO hHook = { NULL }; // keep track of our hook
-//	//std::cout << "\n";
-//	//std::cout << "Win32" + moduleHandleName + "found at address : " << GetProcAddress(GetModuleHandle(TEXT("kernel32")), "Beep") << "\n";
-//
-//	// Install the hook
-//	NTSTATUS result = LhInstallHook(
-//		adress,
-//		hookFunction,
-//		NULL,
-//		&hHook);
-//	if (FAILED(result))
-//	{
-//		std::wstring s(RtlGetLastErrorString());
-//		Beep(2000, 100);
-//		printf("ERROR INSTALLING HOOK!");
-//		//printToConsole(L"Failed to install hook: ");
-//		//printToConsole(s.c_str());
-//	}
-//	else
-//	{
-//		//printToConsole(L"Hook 'installed successfully.");
-//	}
-//
-//	// If the threadId in the ACL is set to 0,
-//	// then internally EasyHook uses GetCurrentThreadId()
-//	ULONG ACLEntries[1] = { 0 };
-//
-//	// Disable the hook for the provided threadIds, enable for all others
-//	LhSetExclusiveACL(ACLEntries, 10, &hHook);
-//}
-
 void* AllocatePageNearAddress(void* targetAddr)
 {
 	SYSTEM_INFO sysInfo;
