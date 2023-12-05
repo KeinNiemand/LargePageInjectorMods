@@ -132,9 +132,12 @@ void HookAllMallocFunctions(const std::string& ModuleName) {
 
 extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteInfo)
 {
-
+	
 	//mi_version() to intilse mi malloc.
 	mi_version();
+
+	//Attach Console to parent process
+	AttachConsole(ATTACH_PARENT_PROCESS);
 
 	//Load configuration
 	Configuration config;

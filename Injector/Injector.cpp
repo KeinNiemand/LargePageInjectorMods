@@ -14,7 +14,7 @@ int wmain(int argc, wchar_t* argv[])
 	if (argc > 1) {
 		passTroughArgument = L"";
 		for (int i = 1; i < argc; i++) {
-			passTroughArgument += argv[i];
+			passTroughArgument += LR"(")"s + argv[i] + LR"(")"s;
 			if (i + 1 < argc) {
 				passTroughArgument += L" ";
 			}
