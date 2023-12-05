@@ -2,10 +2,24 @@ import Configuration;
 #include <vector>
 #include <iostream>
 #include <easyhook.h>
+#include <string>
 
 int wmain(int argc, wchar_t* argv[])
 {
+	using namespace std::string_literals; // enables s-suffix for std::string literals
+
 	const WCHAR* dllToInject = L"MiMallocReplacer.dll";
+	std::wstring passTroughArgument = L" ";
+
+	if (argc > 1) {
+		passTroughArgument = L"";
+		for (int i = 1; i < argc; i++) {
+			passTroughArgument += argv[i];
+			if (i + 1 < argc) {
+				passTroughArgument += L" ";
+			}
+		}
+	}
 
 	//Load config
 	Configuration config;
@@ -17,7 +31,7 @@ int wmain(int argc, wchar_t* argv[])
 
 	NTSTATUS nt = RhCreateAndInject(
 		(WCHAR*)exeName,
-		*argv,
+		(WCHAR*)passTroughArgument.c_str(),
 		HIGH_PRIORITY_CLASS, //Process Creation Options
 		EASYHOOK_INJECT_DEFAULT,
 		nullptr, //No 32bit dll

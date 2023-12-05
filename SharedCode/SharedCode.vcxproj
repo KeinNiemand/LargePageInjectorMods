@@ -125,13 +125,13 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalIncludeDirectories>..\Lib\Headers</AdditionalIncludeDirectories>
       <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AddModuleNamesToAssembly>Configuration;%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
+      <AddModuleNamesToAssembly>Configuration.ixx;%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
       <AdditionalDependencies>mimalloc-override.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Lib\Lib</AdditionalLibraryDirectories>
     </Link>
@@ -163,7 +163,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AddModuleNamesToAssembly>Configuration;%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
+      <AddModuleNamesToAssembly>Configuration.ixx;%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
       <AdditionalDependencies>mimalloc-override.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Lib\Lib</AdditionalLibraryDirectories>
     </Link>
