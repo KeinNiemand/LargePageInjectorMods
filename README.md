@@ -1,15 +1,15 @@
 
-# LargePageInjectorMods for Stellaris and More
+# LargePageInjectorMods for Stellaris, Factorio and More
 
 ## Introduction
 Welcome to the LargePageInjectorMods! This mod significantly enhances Stellaris's or other Games/Applications performance by optimizing its memory management.  
 Support for other games/application is highly expermimental and untested and may not work.
 
 ### What is a Memory Allocator?
-A memory allocator is a software component responsible for managing the allocation and deallocation of memory during a program's execution. Efficient memory allocation is crucial in games like Stellaris, as it can lead to smoother performance and faster load times. By using a more efficient allocator, such as the one introduced in this mod, the game's performance can be noticeably improved.
+A memory allocator is a software component responsible for managing the allocation and deallocation of memory during a program's execution. Efficient memory allocation is crucial in games like Stellaris or Factorio, as it can lead to smoother performance. By using a more efficient allocator, such as the one introduced in this mod, the game's performance can be noticeably improved.
 
 ### Why mimalloc?
-`mimalloc`, developed by Microsoft, is an advanced memory allocator that generally outperforms standard allocators in speed and memory fragmentation efficiency. By integrating `mimalloc` into Stellaris through this mod, the game benefits from faster memory operations, enhancing overall performance. [mimalloc GitHub](https://github.com/microsoft/mimalloc)
+`mimalloc`, developed by Microsoft, is an advanced memory allocator that generally outperforms standard allocators in speed and memory fragmentation efficiency. By integrating `mimalloc` into Stellaris, Factorio or other Games/Applications through this mod, the game benefits from faster memory operations, enhancing overall performance. [mimalloc GitHub](https://github.com/microsoft/mimalloc)
 
 ### About DLL Injection
 DLL (Dynamic Link Library) injection is a method used to run code within the address space of another process by forcing it to load a dynamic-link library. In the LargePageInjectorMods, we utilize DLL injection to seamlessly replace Stellaris's default memory allocator with `mimalloc`, without the need for modifications to the game's executable files.
@@ -59,8 +59,14 @@ This mod uses the following third-party libraries:
 - **EasyHook License**: [Add link to EasyHook License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt)
 
 ## Compatibility
-This mod is primarily designed for Stellaris but might also work for other games provided they are 64 bit native apllicatiions. Bug Reports for unsupported Games/Apllication while mostly welcome will likely be ignored since it's very unliekly that this will work for everything.
-It is compatible with all Stellaris/Factorio mods. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
+  
+### Supported Games
+- Stellaris
+- Factorio
+
+This mod has been tested for the list but might also work for other games provided they are 64 bit native apllicatiions and use the same C Runtime Library. Reports/Suggestion on Games/Application you have succefully used this on, are welcome and I might add them to the supported list.  
+Please don't report any Issues related to unsupored application that don't work unless you have a pull requests that makes them work.
+It should be compatible with all other mods for the supported games. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
 
 ## Config Format
 
