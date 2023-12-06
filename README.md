@@ -25,7 +25,7 @@ The LargePageInjectorMods can provide a substantial performance boost (Performan
 ### Additional Performance Settings
 Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further help with performance. This setting does not require enabling Large Pages and can be tested for its impact on the game. I have this enviourment variable set and have not tested the mod without it, it might do nothing to help performance but it's unlikly that it hurts performance.
 
-Additionally (also untested) setting the enviorument 'MIMALLOC_PURGE_DELAY' to some larger value then the defualt of 10 (probably something like 100-10000) might also help at the cost of additional ram usage.
+Setting the enviorument `MIMALLOC_PURGE_DELAY` to a value >10 (probably something like 100-10000) might also help at the cost of additional ram usage. This has not been tested.
 
 ### Standard Installation
 1. **Download the Mod**: Download the ZIP file for your Game/Game version from [Releases Page](https://github.com/KeinNiemand/LargePageInjectorMods/releases).  
