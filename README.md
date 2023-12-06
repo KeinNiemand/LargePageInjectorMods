@@ -63,16 +63,18 @@ Set the `MIMALLOC_RESERVE_HUGE_OS_PAGES` environment variable to 2 or higher. Th
 
 **Note**: Insufficient continuous RAM can lead to memory fragmentation issues.
  
-## Third-Party Libraries
+## Third-Party Libraries and Credits
 This mod uses the following third-party libraries:
 - **Mimalloc**: [Mimalloc GitHub](https://github.com/microsoft/mimalloc)
 - **Sigmatch**: [Sigmatch GitHub](https://github.com/SpriteOvO/sigmatch)
 - **EasyHook**: [EasyHook GitHub](https://github.com/EasyHook/EasyHook)
+- **Hooking by Example** (Not A Library but I copied some of the functions) [Hooking By Example Github](https://github.com/khalladay/hooking-by-example)
 
 ### 3rd Party Licenses
-- **Mimalloc License**: [Add link to Mimalloc License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/MIMALLOC_LICENCE.txt)
-- **Sigmatch License**: [Add link to Sigmatch License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/sigmatch_LICENSE.txt)
-- **EasyHook License**: [Add link to EasyHook License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt)
+- **Mimalloc License**: [Mimalloc License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/MIMALLOC_LICENCE.txt)
+- **Sigmatch License**: [Sigmatch License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/sigmatch_LICENSE.txt)
+- **EasyHook License**: [EasyHook License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt)
+- **Hooking by Example Licence**: [Hooking by Example Licence](https://github.com/khalladay/hooking-by-example/blob/master/LICENSE)
 
 ## Compatibility
   
