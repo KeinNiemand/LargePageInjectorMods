@@ -39,6 +39,18 @@ Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further 
 To enable Large Pages for further performance enhancement:
 
 1. **Grant LockPagesInMemory Privilege**: As previously described, give your Windows user the `LockPagesInMemory` privilege.
+
+#### Granting LockPagesInMemory Privilege
+To enable Large Pages, you must first grant your Windows user the `LockPagesInMemory` privilege. This can be done through the Local Security Policy editor (`secpol`):
+1. Press `Win + R`, type `secpol.msc`, and press Enter.
+2. Navigate to Security Settings -> Local Policies -> User Rights Assignment.
+3. Double-click on "Lock pages in memory".
+4. Click "Add User or Group" and add your user account.
+5. Apply the changes and restart your computer for them to take effect.
+
+More detailed instructions can be found in the [Microsoft documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/lock-pages-in-memory).
+
+
 2. **Set Environment Variable**: Set the environment variable `MIMALLOC_RESERVE_HUGE_OS_PAGES` to 2 or higher. This number represents the amount of GB of Large Pages to reserve and should ideally be larger than the RAM Stellaris typically uses.
 3. **System Requirements and Recommendations**:
    - Large Pages might not work effectively if your system has less than 16GB of RAM.
