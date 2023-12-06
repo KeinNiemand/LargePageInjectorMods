@@ -36,28 +36,30 @@ Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further 
 
 ### Advanced Installation for Large Pages
 
-To enable Large Pages for further performance enhancement:
+To enhance performance further by enabling Large Pages, follow these steps:
 
-1. **Grant LockPagesInMemory Privilege**: As previously described, give your Windows user the `LockPagesInMemory` privilege.
+#### 1. Grant LockPagesInMemory Privilege
+First, grant your Windows user the `LockPagesInMemory` privilege:
 
-#### Granting LockPagesInMemory Privilege
-To enable Large Pages, you must first grant your Windows user the `LockPagesInMemory` privilege. This can be done through the Local Security Policy editor (`secpol`):
+##### How to Grant LockPagesInMemory Privilege
+This privilege is necessary for enabling Large Pages and can be granted through the Local Security Policy editor (`secpol`):
 1. Press `Win + R`, type `secpol.msc`, and press Enter.
-2. Navigate to Security Settings -> Local Policies -> User Rights Assignment.
-3. Double-click on "Lock pages in memory".
-4. Click "Add User or Group" and add your user account.
-5. Apply the changes and restart your computer for them to take effect.
+2. Navigate to `Security Settings` -> `Local Policies` -> `User Rights Assignment`.
+3. Find and double-click on "Lock pages in memory".
+4. Select "Add User or Group" and add your user account.
+5. Apply the changes and restart your computer to ensure the changes take effect.
 
-More detailed instructions can be found in the [Microsoft documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/lock-pages-in-memory).
+For more detailed instructions, refer to the [Microsoft documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/lock-pages-in-memory).
 
+#### 2. Set Environment Variable
+Set the `MIMALLOC_RESERVE_HUGE_OS_PAGES` environment variable to 2 or higher. This value represents the GB of Large Pages to reserve, ideally more than the RAM typically used by Stellaris.
 
-2. **Set Environment Variable**: Set the environment variable `MIMALLOC_RESERVE_HUGE_OS_PAGES` to 2 or higher. This number represents the amount of GB of Large Pages to reserve and should ideally be larger than the RAM Stellaris typically uses.
-3. **System Requirements and Recommendations**:
-   - Large Pages might not work effectively if your system has less than 16GB of RAM.
-   - For systems with 16GB of RAM: Setting the environment variable higher than 4 is not recommended. It may be necessary to restart your PC before launching the game and disable unnecessary auto-starts to ensure enough continuous RAM is available.
-   - For systems with 32GB of RAM or more: Setting the environment variable to 4-8 is recommended.
+#### 3. System Requirements and Recommendations
+- **Less than 16GB of RAM**: Large Pages may not be effective.
+- **16GB of RAM**: Do not set the environment variable higher than 4. It might require a PC restart and disabling unnecessary auto-starts to ensure enough continuous RAM.
+- **32GB of RAM or more**: Setting the variable to between 4 and 8 is recommended.
 
-Please note that memory fragmentation can be an issue if sufficient continuous RAM is not available.
+**Note**: Insufficient continuous RAM can lead to memory fragmentation issues.
  
 ## Third-Party Libraries
 This mod uses the following third-party libraries:
