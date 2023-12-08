@@ -83,24 +83,28 @@ void WriteAbsoluteJump64(void* absJumpMemory, void* addrToJumpTo)
 
 void InstallHook(void* func2hook, void* payloadFunction)
 {
-	void* relayFuncMemory = AllocatePageNearAddress(func2hook);
-	WriteAbsoluteJump64(relayFuncMemory, payloadFunction); //write relay func instructions
-
-	//now that the relay function is built, we need to install the E9 jump into the target func,
-	//this will jump to the relay function
 	DWORD oldProtect;
 	VirtualProtect(func2hook, 1024, PAGE_EXECUTE_READWRITE, &oldProtect);
+	WriteAbsoluteJump64(func2hook, payloadFunction);
 
-	//32 bit relative jump opcode is E9, takes 1 32 bit operand for jump offset
-	uint8_t jmpInstruction[5] = { 0xE9, 0x0, 0x0, 0x0, 0x0 };
+	//void* relayFuncMemory = AllocatePageNearAddress(func2hook);
+	//WriteAbsoluteJump64(relayFuncMemory, payloadFunction); //write relay func instructions
 
-	//to fill out the last 4 bytes of jmpInstruction, we need the offset between 
-	//the relay function and the instruction immediately AFTER the jmp instruction
-	const uint64_t relAddr = (uint64_t)relayFuncMemory - ((uint64_t)func2hook + sizeof(jmpInstruction));
-	memcpy(jmpInstruction + 1, &relAddr, 4);
+	////now that the relay function is built, we need to install the E9 jump into the target func,
+	////this will jump to the relay function
+	//DWORD oldProtect;
+	//VirtualProtect(func2hook, 1024, PAGE_EXECUTE_READWRITE, &oldProtect);
 
-	//install the hook
-	memcpy(func2hook, jmpInstruction, sizeof(jmpInstruction));
+	////32 bit relative jump opcode is E9, takes 1 32 bit operand for jump offset
+	//uint8_t jmpInstruction[5] = { 0xE9, 0x0, 0x0, 0x0, 0x0 };
+
+	////to fill out the last 4 bytes of jmpInstruction, we need the offset between 
+	////the relay function and the instruction immediately AFTER the jmp instruction
+	//const uint64_t relAddr = (uint64_t)relayFuncMemory - ((uint64_t)func2hook + sizeof(jmpInstruction));
+	//memcpy(jmpInstruction + 1, &relAddr, 4);
+
+	////install the hook
+	//memcpy(func2hook, jmpInstruction, sizeof(jmpInstruction));
 }
 
 void HookIfSigFound(std::string moduleName, MiMallocReplacedFunctions function, void* replacementFunctionPointer) {
@@ -160,7 +164,7 @@ void RedirectOutputToInjectorPipe() {
 
 	FILE* fpio = new FILE();
 	if (GetStdHandle(STD_OUTPUT_HANDLE) != INVALID_HANDLE_VALUE) {
-		if (freopen_s(&fpio, "CONOUT$", "w", stdout) != NULL) {
+		if (freopen_s(&fpio, "ABC", "w", stdout) != NULL) {
 			fflush(stdout);
 		}
 	}
@@ -169,7 +173,7 @@ void RedirectOutputToInjectorPipe() {
 
 	FILE* fperr = new FILE();
 	if (GetStdHandle(STD_ERROR_HANDLE) != INVALID_HANDLE_VALUE) {
-		if (freopen_s(&fperr, "CONOUT$", "w", stderr) != NULL) {
+		if (freopen_s(&fperr, "DEF", "w", stderr) != NULL) {
 			fflush(stdout);
 		}
 	}
@@ -180,10 +184,12 @@ void RedirectOutputToInjectorPipe() {
 extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteInfo)
 {
 
+	RedirectOutputToInjectorPipe();
+
 	//mi_version() to intilse mi malloc.
 	mi_version();
 
-	RedirectOutputToInjectorPipe();	
+	
 
 	std::cout << "MiMallocReplacer.dll: Injected, Trying to Perform Hooks for malloc functions\r\n" << std::endl;
 
