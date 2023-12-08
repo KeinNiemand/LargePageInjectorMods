@@ -164,7 +164,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AddModuleNamesToAssembly>Configuration.ixx;%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
-      <AdditionalDependencies>mimalloc-override.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Lib\Lib</AdditionalLibraryDirectories>
     </Link>
     <ProjectReference />
@@ -181,6 +181,11 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SharedCode.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lib\Submodules\mimalloc\ide\vs2022\mimalloc-override.vcxproj">
+      <Project>{abb5eae7-b3e6-432e-b636-333449892ea7}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

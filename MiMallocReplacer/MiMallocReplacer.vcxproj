@@ -86,6 +86,7 @@
     <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     <CopyLocalProjectReference>true</CopyLocalProjectReference>
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <CopyLocalDebugSymbols>true</CopyLocalDebugSymbols>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -158,7 +159,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>..\Lib\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mimalloc-override.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -184,6 +185,9 @@
     <ResourceCompile Include="MiMallocReplacer.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Lib\Submodules\mimalloc\ide\vs2022\mimalloc-override.vcxproj">
+      <Project>{abb5eae7-b3e6-432e-b636-333449892ea7}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\SharedCode\SharedCode.vcxproj">
       <Project>{9aed6d33-21d7-4b20-b8d4-9b058e529e69}</Project>
     </ProjectReference>
