@@ -1,9 +1,13 @@
+#include "framework.h"
 #include <easyhook.h>
 #include <string>
-#include "framework.h"
-#include "Mallocsigmatch.hpp"
 #include <mimalloc.h>
 #include <mimalloc-new-delete.h>
+#include <iostream>
+#include <fcntl.h>
+#include <io.h>
+
+#include "Mallocsigmatch.hpp"
 
 import Configuration;
 
@@ -130,14 +134,58 @@ void HookAllMallocFunctions(const std::string& ModuleName) {
 	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::operator_new, mi_new);
 }
 
+void RedirectIO(FILE* hFrom, HANDLE hTo)
+{
+	int fd = _open_osfhandle((intptr_t)hTo, _O_WRONLY | _O_TEXT);
+	_dup2(fd, _fileno(hFrom));
+	setvbuf(hFrom, NULL, _IONBF, 0); //Disable buffering.
+}
+
+void RedirectOutputToInjectorPipe() {
+	// Connect to the named pipe
+	HANDLE pipe = CreateFile(
+		L"\\\\.\\pipe\\myoutputpipe",
+		GENERIC_WRITE,
+		0, // no sharing
+		NULL, // default security attributes
+		OPEN_EXISTING,
+		0, // default attributes
+		NULL); // no template file
+
+	if (pipe == INVALID_HANDLE_VALUE) {
+		std::cout << "MiMallocReplacer.dll: Failed to connect to pipe" << std::endl;
+	}
+
+	AttachConsole(ATTACH_PARENT_PROCESS);
+
+	FILE* fpio = new FILE();
+	if (GetStdHandle(STD_OUTPUT_HANDLE) != INVALID_HANDLE_VALUE) {
+		if (freopen_s(&fpio, "CONOUT$", "w", stdout) != NULL) {
+			fflush(stdout);
+		}
+	}
+
+	RedirectIO(fpio, pipe);
+
+	FILE* fperr = new FILE();
+	if (GetStdHandle(STD_ERROR_HANDLE) != INVALID_HANDLE_VALUE) {
+		if (freopen_s(&fperr, "CONOUT$", "w", stderr) != NULL) {
+			fflush(stdout);
+		}
+	}
+
+	RedirectIO(fperr, pipe);
+}
+
 extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteInfo)
 {
-	
+
 	//mi_version() to intilse mi malloc.
 	mi_version();
 
-	//Attach Console to parent process
-	AttachConsole(ATTACH_PARENT_PROCESS);
+	RedirectOutputToInjectorPipe();	
+
+	std::cout << "MiMallocReplacer.dll: Injected, Trying to Perform Hooks for malloc functions\r\n" << std::endl;
 
 	//Load configuration
 	Configuration config;
@@ -145,11 +193,13 @@ extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteI
 	config.loadFromFile(".\\LargePageInjectorMods.config");
 
 	for (auto moduleName : config.modulesToPatch) {
+		std::cout << "MiMallocReplacer.dll: Raplcing malloc function in:" << std::endl;
 		HookAllMallocFunctions(moduleName);
 	}
 	
 	//Let the game run
 	Beep(1000, 100);
+	std::cout << "MiMallocReplacer.dll: Hooking Complete, proceding with application execution\r\n" << std::endl;
     RhWakeUpProcess();
 
 
