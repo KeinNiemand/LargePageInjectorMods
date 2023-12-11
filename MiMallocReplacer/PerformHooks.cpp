@@ -1,16 +1,14 @@
+#include <mimalloc.h>
+#include <mimalloc-new-delete.h>
 #include "framework.h"
 #include <easyhook.h>
 #include <string>
-#include <mimalloc.h>
-#include <mimalloc-new-delete.h>
 #include <iostream>
 #include <fcntl.h>
 #include <io.h>
 
-#include "Mallocsigmatch.hpp"
-
+import MallocSigmatch;
 import Configuration;
-
 //DWORD gFreqOffset = 0;
 //BOOL WINAPI myBeepHook(DWORD dwFreq, DWORD dwDuration)
 //{

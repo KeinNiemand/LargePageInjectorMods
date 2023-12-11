@@ -1,16 +1,13 @@
 module;
-
-#include <mimalloc.h>
-#include <mimalloc-override.h>
-#include <mimalloc-new-delete.h>
-#include <iostream>
-#include <vector>
-#include <string>
-#include <fstream>
 #define WIN_WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 export module Configuration;
+export import <vector>;
+export import <string>;
+import <iostream>;
+import <fstream>;
+
 
 export class Configuration {
 public:

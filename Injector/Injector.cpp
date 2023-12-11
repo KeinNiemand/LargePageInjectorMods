@@ -1,8 +1,9 @@
-import Configuration;
 #include <vector>
 #include <iostream>
 #include <easyhook.h>
 #include <string>
+
+import Configuration;
 
 HANDLE createPipe() {
 	// Create a named pipe

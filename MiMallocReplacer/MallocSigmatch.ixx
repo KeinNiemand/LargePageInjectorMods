@@ -1,22 +1,19 @@
-#pragma once
+export module MallocSigmatch;
+export import <unordered_map>;
+export import <vector>;
+export import <string>;
+import <sigmatch.hpp>;
+import <iostream>;
 
-#include <unordered_map>
-#include <string>
-#include <sigmatch.hpp>
+export using namespace sigmatch_literals;
 
-using namespace sigmatch_literals;
-
-
-/// <summary>
-/// An Enum filled with all the function that are supposed to be replaced by mimalloc used
-/// </summary>
-enum class MiMallocReplacedFunctions
+export enum class MiMallocReplacedFunctions
 {
 	malloc,
 	free,
 	free_base,
 	realloc,
-	calloc, 
+	calloc,
 	strdup,
 	realpath,
 	_expand,
@@ -58,8 +55,7 @@ enum class MiMallocReplacedFunctions
 	operator_deleteArr
 };
 
-
-class mallocsigmatch
+export class mallocsigmatch
 {
 private:
 	std::unordered_map<MiMallocReplacedFunctions, sigmatch::signature> functionSignatureMap = {
@@ -83,6 +79,28 @@ private:
 
 
 public:
-	std::vector<void*> GetFunctionAdress(std::string moduleName,MiMallocReplacedFunctions function);
-};
+	std::vector<void*> GetFunctionAdress(std::string moduleName, MiMallocReplacedFunctions function) {
+		std::vector<void*> foundAdresses;
 
+		sigmatch::this_process_target target;
+		sigmatch::search_result result = target.in_module(moduleName).search(functionSignatureMap[function]);
+
+		if (result.matches().size() > 1)
+			std::cout << "MiMallocReplacer.dll: WARNING: function in module " << moduleName << " Found more then once." << std::endl;
+
+		if (result.matches().size() > 0) {
+			//Just return the first match for now
+			for (const std::byte* address : result.matches()) {
+				foundAdresses.push_back((void*)address);
+			}
+		}
+		else {
+			std::cout << "MiMallocReplacer.dll: WARNING: No Matches Found for function " << (int)function << " In Module :" << moduleName << std::endl;
+		}
+
+
+
+		//Return nullptr if search fails
+		return foundAdresses;
+	}
+};
