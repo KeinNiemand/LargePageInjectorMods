@@ -5,8 +5,6 @@ export import <string>;
 import <sigmatch.hpp>;
 import <iostream>;
 
-export using namespace sigmatch_literals;
-
 export enum class MiMallocReplacedFunctions
 {
 	malloc,
@@ -55,10 +53,27 @@ export enum class MiMallocReplacedFunctions
 	operator_deleteArr
 };
 
+//Copy and basted from sigmatch.hpp, Intellisense really dosn't like using namespace inside a module for some reason and will give internal error on importing that
+//module despite everything compiling fine
+template <sigmatch::details::consteval_str_buffer kSigStrBuf>
+[[nodiscard]] constexpr decltype(auto) operator""_sig()
+{
+	return sigmatch::signature{
+		sigmatch::signature::____literal_place_t{},
+		sigmatch::impl::parse_sig_str_compile_time<kSigStrBuf>() };
+}
+
+
 export class mallocsigmatch
 {
 private:
-	std::unordered_map<MiMallocReplacedFunctions, sigmatch::signature> functionSignatureMap = {
+	std::unordered_map<MiMallocReplacedFunctions, sigmatch::signature> functionSignatureMap;
+
+
+public:
+
+	mallocsigmatch() {
+		functionSignatureMap = {
 	{MiMallocReplacedFunctions::malloc,             "40 53 48 83 ec 20 48 8b d9 48 83 f9 ?? 77 3c 48 85 c9"_sig},
 	{MiMallocReplacedFunctions::free_base,          "48 85 c9 74 ?? 53 48 83 ec 20 4c 8b c1 33 d2 48 8b 0d ?? ?? ?? ??"_sig},
 	{MiMallocReplacedFunctions::free,               "c7 44 24 10 00 00 00 00 8b 44 24 10 e9 ?? ?? ?? ??"_sig},
@@ -75,10 +90,10 @@ private:
 
 
 
-	};
+		};
 
+	}
 
-public:
 	std::vector<void*> GetFunctionAdress(std::string moduleName, MiMallocReplacedFunctions function) {
 		std::vector<void*> foundAdresses;
 
