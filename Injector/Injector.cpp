@@ -73,7 +73,9 @@ int wmain(int argc, wchar_t* argv[])
 	}
 	else
 	{
+#ifdef DEBUG
 		std::wcout << L"Library injected successfully.\n";
+#endif
 	}
 
 	
@@ -82,12 +84,15 @@ int wmain(int argc, wchar_t* argv[])
 	BOOL connected = ConnectNamedPipe(pipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
 
 	if (!connected) {
+#ifdef DEBUG
 		std::cerr << "Failed to connect to pipe" << std::endl;
+#endif
 		CloseHandle(pipe);
 		return 1;
 	}
-
+#ifdef DEBUG
 	std::cout << "Child process connected. Reading data..." << std::endl;
+#endif
 
 	// Read data from the pipe and output the result (output stdout of launched game)
 	DWORD bytesRead;
@@ -100,7 +105,9 @@ int wmain(int argc, wchar_t* argv[])
 
 	
 	CloseHandle(pipe);
+#ifdef DEBUG
 	std::wcout << L"Pipe Closed";
+#endif
 	
 	
 	return 0;
