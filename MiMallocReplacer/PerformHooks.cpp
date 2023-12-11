@@ -162,23 +162,24 @@ void RedirectOutputToInjectorPipe() {
 
 	AttachConsole(ATTACH_PARENT_PROCESS);
 
-	FILE* fpio = new FILE();
-	if (GetStdHandle(STD_OUTPUT_HANDLE) != INVALID_HANDLE_VALUE) {
-		if (freopen_s(&fpio, "ABC", "w", stdout) != NULL) {
-			fflush(stdout);
-		}
-	}
+	//FILE* fpio = new FILE();
+	//if (GetStdHandle(STD_OUTPUT_HANDLE) != INVALID_HANDLE_VALUE) {
+	//	if (freopen_s(&fpio, "CONOUT$", "w", stdout) != NULL) {
+	//		fflush(stdout);
+	//	}
+	//}
 
-	RedirectIO(fpio, pipe);
+	//RedirectIO(fpio, pipe);
 
-	FILE* fperr = new FILE();
-	if (GetStdHandle(STD_ERROR_HANDLE) != INVALID_HANDLE_VALUE) {
-		if (freopen_s(&fperr, "DEF", "w", stderr) != NULL) {
-			fflush(stdout);
-		}
-	}
+	//FILE* fperr = new FILE();
+	//if (GetStdHandle(STD_ERROR_HANDLE) != INVALID_HANDLE_VALUE) {
+	//	if (freopen_s(&fperr, "CONOUT$", "w", stderr) != NULL) {
+	//		fflush(stdout);
+	//	}
+	//}
 
-	RedirectIO(fperr, pipe);
+	RedirectIO(stdout, pipe);
+	RedirectIO(stderr, pipe);
 }
 
 extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteInfo)
