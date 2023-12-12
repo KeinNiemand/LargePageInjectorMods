@@ -93,8 +93,7 @@ public:
 			{ MiMallocReplacedFunctions::_aligned_free,      "48 83 ec 28 48 85 c9 74 0d 48 83 e1 f8 48 8b 49 f8"_sig },
 			{ MiMallocReplacedFunctions::operator_new,       "40 53 48 83 ec 20 48 8b d9 eb 0f 48 8b cb"_sig },
 			},
-		functionNameMap
-			{
+		functionNameMap {
 				{MiMallocReplacedFunctions::malloc, "malloc"},
 				{MiMallocReplacedFunctions::free, "free"},
 				{MiMallocReplacedFunctions::free_base, "free_base"}, // Placeholder, actual name might differ
@@ -139,17 +138,12 @@ public:
 				{MiMallocReplacedFunctions::operator_delete, "operator delete"},
 				{MiMallocReplacedFunctions::operator_deleteArr, "operator delete[]"} // Placeholder, actual name might differ
 			}
-	
-	{
-
-		functionNameMap = {
-	
-		};
-	}
+	{}
 
 	std::vector<void*> GetFunctionAdress(std::string moduleName, MiMallocReplacedFunctions function) {
 		std::vector<void*> foundAdresses;
 
+		//First check with GetProcAdress if function can be found in the Export table of the module
 		void* procAddress = GetProcAddress(GetModuleHandleA(moduleName.c_str()), functionNameMap[function].c_str());
 		if (procAddress != nullptr) {
 			// If GetProcAddress returns a valid address, use it
@@ -157,6 +151,7 @@ public:
 			return foundAdresses;
 		}
 
+		//Function has not been found in the export table so use 
 		sigmatch::this_process_target target;
 		sigmatch::search_result result = target.in_module(moduleName).search(functionSignatureMap[function]);
 

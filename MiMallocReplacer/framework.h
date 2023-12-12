@@ -1,6 +1,4 @@
-// header.h: Includedatei für Include-Standardsystemdateien
-// oder projektspezifische Includedateien.
-//
+// Includes windows.h with WIN32_LEAN_AND_MEAN to remove crap
 
 #pragma once
 
