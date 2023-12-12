@@ -133,6 +133,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>..\Lib\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <DelayLoadDLLs>EasyHook64.dll</DelayLoadDLLs>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -160,6 +161,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>..\Lib\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <DelayLoadDLLs>EasyHook64.dll</DelayLoadDLLs>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -177,7 +179,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="MallocSigmatch.ixx" />
+    <ClCompile Include="MallocSigmatch.ixx">
+      <FileType>CppCode</FileType>
+    </ClCompile>
     <ClCompile Include="PerformHooks.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +190,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Lib\Submodules\mimalloc\ide\vs2022\mimalloc-override.vcxproj">
       <Project>{abb5eae7-b3e6-432e-b636-333449892ea7}</Project>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
     </ProjectReference>
     <ProjectReference Include="..\SharedCode\SharedCode.vcxproj">
       <Project>{9aed6d33-21d7-4b20-b8d4-9b058e529e69}</Project>
