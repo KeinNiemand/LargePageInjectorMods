@@ -133,7 +133,8 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>..\Lib\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <DelayLoadDLLs>EasyHook64.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -161,7 +162,8 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>..\Lib\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <DelayLoadDLLs>EasyHook64.dll</DelayLoadDLLs>
+      <DelayLoadDLLs>
+      </DelayLoadDLLs>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
