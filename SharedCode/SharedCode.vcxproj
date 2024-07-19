@@ -129,7 +129,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AddModuleNamesToAssembly>Configuration.ixx;%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
+      <AddModuleNamesToAssembly>%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Lib\Lib</AdditionalLibraryDirectories>
     </Link>
@@ -159,7 +159,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AddModuleNamesToAssembly>Configuration.ixx;%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
+      <AddModuleNamesToAssembly>%(AddModuleNamesToAssembly)</AddModuleNamesToAssembly>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Lib\Lib</AdditionalLibraryDirectories>
     </Link>
@@ -167,6 +167,7 @@
     <ProjectReference />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="Configuration.ixx" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>

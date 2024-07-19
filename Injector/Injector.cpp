@@ -4,7 +4,6 @@
 #include <string>
 
 import Configuration;
-
 HANDLE createPipe() {
 	// Create a named pipe
 	HANDLE pipe = CreateNamedPipe(
