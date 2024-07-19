@@ -24,6 +24,26 @@ HANDLE createPipe() {
 	return pipe;
 }
 
+std::unique_ptr<std::wstring> getExecutableFolderPath() {
+	// Allocate buffer on the heap
+	std::unique_ptr<wchar_t[]> buffer(new wchar_t[65535]());
+	DWORD size = GetModuleFileNameW(NULL, buffer.get(), 65535);
+	if (size == 0) {
+		// Handle error, GetLastError() can be used to get error details
+		return nullptr;
+	}
+
+	// Convert buffer to std::wstring
+	std::wstring path(buffer.get());
+	// Find the last backslash in the path to separate the folder path
+	size_t pos = path.find_last_of(L"\\/");
+	if (pos != std::wstring::npos) {
+		return std::make_unique<std::wstring>(path.substr(0, pos));
+	}
+
+	return nullptr;
+}
+
 int wmain(int argc, wchar_t* argv[])
 {
 	using namespace std::string_literals; // enables s-suffix for std::string literals
@@ -41,6 +61,13 @@ int wmain(int argc, wchar_t* argv[])
 		}
 	}
 
+	//Change Current Directory to Executuabel Folder this is probably not the best solution but might work
+	//TODO: instead of changing direcotry maybe use absolute paths instead (including a way run the exe from in exectuable folder if a relative path is passed into the config) or rdstore path
+	{
+
+		std::unique_ptr<std::wstring> executableFolderPath = getExecutableFolderPath();
+		_wchdir(executableFolderPath->c_str());
+	}
 	//Load config
 	Configuration config;
 	config.loadFromFile(".\\LargePageInjectorMods.config");
