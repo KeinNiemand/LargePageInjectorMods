@@ -7,10 +7,6 @@
 <!-- PROJECT LOGO -->
 <br>
 <div align="center">
-<!--   <a href="https://github.com/KeinNiemand/LargePageInjectorMods">
-    <img src="../assets/images/logo.png" alt="Logo" width="896" height="368">
-  </a>
- -->
 
   <h1 align="center">LargePageInjectorMods</h1>
   <p align="center">
@@ -208,6 +204,7 @@ LargePageInjectorMods is distributed under the MIT License. See `LICENSE` for mo
 - Sigmatch is distributed under the Apache-2.0 License. See [License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/sigmatch_LICENSE.txt) for more information.
 - EasyHook is distributed under the MIT License. See [License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt) for more information.
 - Hooking By Example is distributed under the MIT License. See [License](https://github.com/khalladay/hooking-by-example/blob/master/LICENSE) for more information.
+- TOML11 is distributed under the MIT License. See [License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/toml11_LICENSE.txt) for more information.
 
 ---
 
