@@ -69,7 +69,7 @@
 # Disclaimer:
 </div>
 
-## To ensure the best performance, part of this software (Large Pages) requires Admin privileges, which is a security risk if not used properly. Although this is an optional part, it is a warning for those who seek bigger performance gains from this software. The software itself is non-malicious, but granting Admin privileges, without previous evaluation, to any kind of software is a serious security risk. Before continuing, make sure you have: <br>1. Evaluated the risks of using any third-party modifications and granting Admin privileges to any kind of software,<br>2. Updated your Security software so it's up-to-date,<br>3. Scanned your PC beforehand to detect if any potentially malicious software is present that can leverage the Admin privileges you're going to grant to the software,<br>4. Compared hashes of the downloaded file with the ones provided by the author to check if any tampering was done to the software.<br> Only after satisfying above mentioned statements should you continue. <br><br>Note that the above-mentioned disclaimer applies not only to LagePageInjectorMods but to every third-party software that you're not sure is safe.<br><br> Also note that your Security software could detect LargePageInjectorMods' Injector.exe as malware, as it injects code that is not present in the software, a method that actual malware could utilize. It is a false-positive, and if you're deterred from downloading a pre-compiled ZIP file, you can read through the source code and compile it yourself. <clear>
+## To ensure the best performance, part of this software (Large Pages) requires Admin privileges, which is a security risk if not used properly.<br> Although this is an optional part, it is a warning for those who seek bigger performance gains from this software.<br> The software itself is non-malicious, but granting Admin privileges, without previous evaluation, to any kind of software is a serious security risk. Before continuing, make sure you have:<br><br>1. Evaluated the risks of using any third-party modifications and granting Admin privileges to any kind of software,<br>2. Updated your Security software so it's up-to-date,<br>3. Scanned your PC beforehand to detect if any potentially malicious software is present that can leverage the Admin privileges you're going to grant to the software,<br>4. Compared hashes of the downloaded file with the ones provided by the author to check if any tampering was done to the software.<br> Only after satisfying above mentioned statements should you continue. <br><br>Note that the above-mentioned disclaimer applies not only to LagePageInjectorMods but to every third-party software that you're not sure is safe.<br><br> Also note that your Security software could detect LargePageInjectorMods' Injector.exe as malware, as it injects code that is not present in the software, a method that actual malware could utilize. It is a false-positive, and if you're deterred from downloading a pre-compiled ZIP file, you can read through the source code and compile it yourself. <clear>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -111,15 +111,15 @@ Before using LargePageInjectorMods, you must decide whether you want to use both
 
 ### Prerequisites
 
-If Large Pages won't be enabled, please skip to the <a href="#installation">Installation</a>
+If Large Pages won't be enabled, please skip to the <a href="#installation">Installation</a>.
 
 If Large Pages **will** be enabled, follow the next steps:
 
-1. Press `Win + R`, type `secpol.msc`, and press Enter.
-2. Navigate to `Security Settings` -> `Local Policies` -> `User Rights Assignment`.
-3. Find and double-click on "Lock pages in memory".
-4. Select "Add User or Group" and add your user account.
-5. Apply the changes and restart your computer to ensure the changes take effect.
+1. Press `Win + R`, type `secpol.msc`, and press Enter
+2. Navigate to `Security Settings` -> `Local Policies` -> `User Rights Assignment`
+3. Find and double-click on "Lock pages in memory"
+4. Select "Add User or Group" and add your user account
+5. Apply the changes and restart your computer to ensure the changes take effect
 
 > [!NOTE]
 > For more detailed instructions, refer to the [Microsoft documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/lock-pages-in-memory).
@@ -141,7 +141,7 @@ To install LargePageInjectorMods, follow the next steps:
 1. Download the appropriate ZIP file from the [Releases Page](https://github.com/KeinNiemand/LargePageInjectorMods/releases)
 2. Locate the Game Executable file 
 3. Extract the above-mentioned ZIP file into the directory where the main executable is located
-4. Change `LargePageInjectorMods.config` file according to instructions in the <a href="#usage">Usage</a> section.
+4. Change `LargePageInjectorMods.config` file according to instructions in the <a href="#usage">Usage</a> section
 
 ---
 
@@ -163,20 +163,21 @@ If any DLLs have their internal memory allocator, they should be added one line 
 To further enhance the performance of mimalloc, you can set the next environment variables:
 1. `MIMALLOC_ARENA_EAGER_COMMIT` can be set to `1`
 2. `MIMALLOC_PURGE_DELAY` can be set to a value above `10`
-   - This might improve performance at the cost of additional RAM usage.
+   - This might improve performance at the cost of additional RAM usage
 3. `MIMALLOC_RESERVE_HUGE_OS_PAGES` can be set to a value equal to or above `2`
-   - This value represents how many gigabytes of Large pages should be reserved (Ideally more than the RAM typically used by a game/application.)
+   - Large Pages should be enabled for this environment variable to take effect
+   - This value represents how many gigabytes of Large pages should be reserved (Ideally more than the RAM typically used by a game/application)
 
 ### MIMALLOC_RESERVE_HUGE_OS_PAGES
+
+> [!WARNING] 
+> Insufficient continuous RAM can lead to memory fragmentation issues.
 
 Depending on the capacity of your RAM, the next values should be used:
 
 - ≤16GB RAM - Large Pages may not have any effect on performance
 - 16GB RAM - Do not set a value higher than 4
 - ≥32GB RAM - A Value of between 4 to 8 is recommended
-
-> [!WARNING] 
-> Insufficient continuous RAM can lead to memory fragmentation issues.
 
 ---
 
