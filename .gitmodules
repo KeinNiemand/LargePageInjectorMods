@@ -1,6 +1,6 @@
 [submodule "mimalloc"]
-	path = Lib\Submodules\mimalloc
+	path = ./Lib/Submodules/mimalloc
 	url = https://github.com/KeinNiemand/mimalloc.git
-[submodule "Lib\Submodules\mimalloc"]
-	path = Lib\Submodules\mimalloc
+[submodule "Lib/Submodules/mimalloc"]
+	path = ./Lib/Submodules/mimalloc
 	url = https://github.com/KeinNiemand/mimalloc.git
