@@ -19,6 +19,9 @@ The LargePageInjectorMods can provide a substantial performance boost (Performan
 
 - **Standard Performance Increase**: Small performance increase of 4-5%, could be completly negligible or significantly larger depending on circumstances.
 - **Enhanced Performance with Large Pages**: When enabled with Large Pages, the mod can deliver a 5-80%+ Performance Increase.
+  - Benchmak Result for Factorio with Ryzen 7800X3D:
+    Without Large Page Injector Mods[Factoriobox](https://factoriobox.1au.us/result/6ca27dcc-14a9-4484-8d2a-7d6da622462f): 46 UPS
+    With Large Page Injector Mods and Large Pages [Factoriobox](https://factoriobox.1au.us/result/919e6097-5c70-4092-8ecb-4c1ea8cbba1a): 54 UPS
   
 - Please note that the performance increase can varry dratically based on your save (Performanc increase should be bigger the later in the game you are and the heavier the save is), your hardware(generally there bigger performacne gains on weaker hardware), what mods your using and more. Your performance gains may me significantly smaller or larger then anything mentioned above. Somone with weaker hardware did report getting an 80% Performance increase so large gains are not impossible.
 
