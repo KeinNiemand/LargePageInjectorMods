@@ -70,7 +70,7 @@ int wmain(int argc, wchar_t* argv[])
 	}
 	//Load config
 	Configuration config;
-	config.loadFromFile(".\\LargePageInjectorMods.config");
+	config.loadFromFile(".\\LargePageInjectorMods.toml");
 
 	const WCHAR* exeName = config.LaunchPath.c_str();
 	ULONG procIdVar = 0;

@@ -205,7 +205,7 @@ extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteI
 	//Load configuration
 	Configuration config;
 
-	config.loadFromFile(".\\LargePageInjectorMods.config");
+	config.loadFromFile(".\\LargePageInjectorMods.toml");
 
 	for (auto moduleName : config.modulesToPatch) {
 #ifdef DEBUG
