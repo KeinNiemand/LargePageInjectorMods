@@ -8,16 +8,6 @@
 
 import MallocSigmatch;
 import Configuration;
-//DWORD gFreqOffset = 0;
-//BOOL WINAPI myBeepHook(DWORD dwFreq, DWORD dwDuration)
-//{
-//	std::cout << "\n    BeepHook: ****All your beeps belong to us!\n\n";
-//	return Beep(dwFreq + gFreqOffset, dwDuration);
-//}
-
-// EasyHook will be looking for this export to support DLL injection. If not found then 
-// DLL injection will fail.
-extern "C" void __declspec(dllexport) __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO * inRemoteInfo);
 
 void* AllocatePageNearAddress(void* targetAddr)
 {
@@ -111,7 +101,6 @@ void HookIfSigFound(std::string moduleName, MiMallocReplacedFunctions function, 
 	for (void* functionAdress : functionAdresses) {
 		if (functionAdress) {
 			InstallHook(functionAdress, replacementFunctionPointer);
-			//Beep(1000, 100);
 		}
 		else {
 			Beep(250, 100);
@@ -134,7 +123,6 @@ void HookAllMallocFunctions(const std::string& ModuleName) {
 	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::_aligned_free, mi_free);
 	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::operator_new, mi_new);
 }
-
 
 void RedirectIO(FILE* hFrom, HANDLE hTo)
 {
@@ -186,39 +174,45 @@ void RedirectOutputToInjectorPipe() {
 	RedirectIO(stderr, pipe);
 }
 
+// EasyHook will be looking for this export to support DLL injection. If not found then 
+// DLL injection will fail.
 extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteInfo)
 {
-	
-	
+
+
 #ifdef DEBUG
 	Sleep(10000);
 #endif
+	//Initilise mi_malloc
 	mi_version();
-	RedirectOutputToInjectorPipe();
-	
-#ifdef DEBUG
-	std::cout << "MiMallocReplacer.dll: Injected, Trying to Perform Hooks for malloc functions" << std::endl;
-#endif // DEBUG
 
-	
-
-	//Load configuration
 	Configuration config;
-
 	config.loadFromFile(".\\LargePageInjectorMods.toml");
 
+	//Redirect stdout to injector pipe
+	if (config.redirectConsoleOutput) {
+		RedirectOutputToInjectorPipe();
+	}
+
+	if (config.verbosity >= 4)
+		std::cout << "MiMallocReplacer.dll: Injected, Trying to Perform Hooks for malloc functions" << std::endl;
+
+	//Perform hooks
 	for (auto moduleName : config.modulesToPatch) {
-#ifdef DEBUG
-		std::cout << "MiMallocReplacer.dll: Raplcing malloc function in:" << moduleName << std::endl;
-#endif
+		if (config.verbosity >= 4)
+			std::cout << "MiMallocReplacer.dll: Raplcing malloc function in:" << moduleName << std::endl;
 		HookAllMallocFunctions(moduleName);
 	}
-	
+
+	//Beep and/or log if enabled
+	if (config.enableBeep)
+		Beep(1000, 100);
+	if (config.verbosity >= 4)
+		std::cout << "MiMallocReplacer.dll: Hooking Complete, proceding with application execution\r\n" << std::endl;
+
 	//Let the game run
-	Beep(1000, 100);
-#ifdef DEBUG
-	std::cout << "MiMallocReplacer.dll: Hooking Complete, proceding with application execution\r\n" << std::endl;
-#endif
-    RhWakeUpProcess();
+	RhWakeUpProcess();
 	return;
 }
+
+

@@ -2,6 +2,7 @@ module;
 #define WIN_WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <toml.hpp>;
+#include <filesystem>;
 
 module Configuration;
 import <vector>;
@@ -11,27 +12,44 @@ import <fstream>;
 
 bool Configuration::loadFromFile(const std::string& filename)
 {
-	try {
-		auto data = toml::parse(filename);
+    try {
+        auto data = toml::parse(filename);
 
-		// Parse LaunchPath
-		auto launchPathStr = toml::find<std::string>(data, "LaunchPath");
-		LaunchPath = utf8_to_wstring(launchPathStr);
+        // Parse LaunchPath
+        auto launchPathStr = toml::find<std::string>(data, "LaunchPath");
+        LaunchPath = utf8_to_wstring(launchPathStr);
 
-		// Parse ModulesToPatch
-		auto modules = toml::find<std::vector<std::string>>(data, "ModulesToPatch");
-		modulesToPatch = modules;
+        // Parse ModulesToPatch
+        auto modules = toml::find<std::vector<std::string>>(data, "ModulesToPatch");
+        modulesToPatch = modules;
 
-		return true;
-	}
-	catch (const toml::syntax_error& err) {
-		std::cerr << "Failed to parse TOML file: " << err.what() << "\r\n";
-		return false;
-	}
-	catch (const std::out_of_range& err) {
-		std::cerr << "Missing required key in TOML file: " << err.what() << "\r\n";
-		return false;
-	}
+        // Parse Verbosity
+        verbosity = toml::find_or<int>(data, "Verbosity", 0);
+
+        // Parse RedirectConsoleOutput
+        redirectConsoleOutput = toml::find_or<bool>(data, "RedirectConsoleOutput", false);
+
+        // Parse EnableBeep
+        enableBeep = toml::find_or<bool>(data, "EnableBeep", false);
+
+        // Parse [Environment] table
+        if (data.contains("Environment")) {
+            auto env_table = toml::find<toml::table>(data, "Environment");
+            for (const auto& [key, value] : env_table) {
+                environment[key] = toml::get<std::string>(value);
+            }
+        }
+
+        return true;
+    }
+    catch (const toml::syntax_error& err) {
+        std::cerr << "Failed to parse TOML file: " << err.what() << "\r\n";
+        return false;
+    }
+    catch (const std::out_of_range& err) {
+        std::cerr << "Missing required key in TOML file: " << err.what() << "\r\n";
+        return false;
+    }
 }
 
 std::wstring Configuration::utf8_to_wstring(const std::string& str) {

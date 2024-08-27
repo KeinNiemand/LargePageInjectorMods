@@ -24,21 +24,25 @@ HANDLE createPipe() {
 	return pipe;
 }
 
-std::unique_ptr<std::wstring> getExecutableFolderPath() {
+std::wstring getExecutableFolderPath() {
 	// Allocate buffer on the heap
-	std::unique_ptr<wchar_t[]> buffer(new wchar_t[65535]());
-	DWORD size = GetModuleFileNameW(NULL, buffer.get(), 65535);
+
+	//NTFS technical max path length, I know this is overkill (normally MAX_PATH 260 is enough)
+	//but large path aware applications can have longer paths so this makes it easier to enable large path support if I want to in the future
+	constexpr size_t bufferSize = 65535; 
+	auto buffer = std::make_unique<wchar_t[]>(bufferSize);
+	DWORD size = GetModuleFileNameW(NULL, buffer.get(), bufferSize);
 	if (size == 0) {
 		// Handle error, GetLastError() can be used to get error details
 		return nullptr;
 	}
 
 	// Convert buffer to std::wstring
-	std::wstring path(buffer.get());
+	std::wstring path(buffer.get(), bufferSize);
 	// Find the last backslash in the path to separate the folder path
 	size_t pos = path.find_last_of(L"\\/");
 	if (pos != std::wstring::npos) {
-		return std::make_unique<std::wstring>(path.substr(0, pos));
+		return path.substr(0, pos);
 	}
 
 	return nullptr;
@@ -64,9 +68,8 @@ int wmain(int argc, wchar_t* argv[])
 	//Change Current Directory to Executuabel Folder this is probably not the best solution but might work
 	//TODO: instead of changing direcotry maybe use absolute paths instead (including a way run the exe from in exectuable folder if a relative path is passed into the config) or rdstore path
 	{
-
-		std::unique_ptr<std::wstring> executableFolderPath = getExecutableFolderPath();
-		_wchdir(executableFolderPath->c_str());
+		std::wstring executableFolderPath = getExecutableFolderPath();
+		_wchdir(executableFolderPath.c_str());
 	}
 	//Load config
 	Configuration config;
@@ -77,8 +80,19 @@ int wmain(int argc, wchar_t* argv[])
 	ULONG* procId = &procIdVar;
 
 	//Create Named Pipe so stdout can be passed trough
-	HANDLE pipe = createPipe();
+	HANDLE pipe = nullptr;
+	if (config.redirectConsoleOutput) {
+		// Create a named pipe
+		pipe = createPipe();
+	}
 
+	//Setup enviroment variables from config
+	for (auto& [key, value] : config.environment) {
+		//Use windows API to set enviroment variables make sure child procceses inherit
+		SetEnvironmentVariableA(key.c_str(), value.c_str());
+	}
+	
+	//Run the process and inject the dll
 	NTSTATUS nt = RhCreateAndInject(
 		(WCHAR*)exeName,
 		(WCHAR*)passTroughArgument.c_str(),
@@ -90,50 +104,46 @@ int wmain(int argc, wchar_t* argv[])
 		0, //0 Pass trough size
 		procId //Store Created Proc Id
 	);
-
-	if (nt != 0)
+	
+	//TODO: Replace all these verbosity checks with a simple logger
+	if (nt != 0 && config.verbosity >= 1)
 	{
 		printf("RhInjectLibrary failed with error code = %d\n", nt);
 		PWCHAR err = RtlGetLastErrorString();
 		std::wcout << err << "\n";
 	}
-	else
+	else if(config.verbosity >= 4)
 	{
-#ifdef DEBUG
 		std::wcout << L"Library injected successfully.\n";
-#endif
 	}
 
-	
 
 	// Wait for the child process to connect
-	BOOL connected = ConnectNamedPipe(pipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
+	if (config.redirectConsoleOutput) {
+		BOOL connected = ConnectNamedPipe(pipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
+		if (!connected) {
+			if (config.verbosity >= 1)
+				std::cerr << "Failed to connect to pipe" << std::endl;
 
-	if (!connected) {
-#ifdef DEBUG
-		std::cerr << "Failed to connect to pipe" << std::endl;
-#endif
+			CloseHandle(pipe);
+			return 1;
+		}
+
+		if (config.verbosity >= 4)
+			std::wcout << L"Child process connected. Reading data...\n";
+		// Read data from the pipe and output the result (output stdout of launched game)
+		DWORD bytesRead;
+		char buffer[1000];
+		while (ReadFile(pipe, buffer, sizeof(buffer) - 1, &bytesRead, NULL) != FALSE) {
+			buffer[bytesRead] = '\0'; // null-terminate the string
+			std::cout << buffer;
+		}
+
 		CloseHandle(pipe);
-		return 1;
-	}
-#ifdef DEBUG
-	std::cout << "Child process connected. Reading data..." << std::endl;
-#endif
+		if (config.verbosity >= 4)
+			std::wcout << L"Pipe Closed";
 
-	// Read data from the pipe and output the result (output stdout of launched game)
-	DWORD bytesRead;
-	char buffer[1000];
-	while (ReadFile(pipe, buffer, sizeof(buffer) - 1, &bytesRead, NULL) != FALSE) {
-		buffer[bytesRead] = '\0'; // null-terminate the string
-		std::cout << buffer;
-		//std::wcout << L"Hello Hello";
 	}
-
-	
-	CloseHandle(pipe);
-#ifdef DEBUG
-	std::wcout << L"Pipe Closed";
-#endif
 	
 	
 	return 0;

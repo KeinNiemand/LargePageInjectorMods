@@ -1,19 +1,19 @@
 module;
-#define WIN_WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <toml.hpp>;
 
 export module Configuration;
 export import <vector>;
 export import <string>;
-export import <iostream>;
-export import <fstream>;
+export import <map>;
 
 
 export class __declspec(dllexport) Configuration {
 public:
     std::wstring LaunchPath;
     std::vector<std::string> modulesToPatch;
+    int verbosity = 0; // Default verbosity level
+    bool redirectConsoleOutput = false; // Default to false
+    bool enableBeep = false; // Default to false
+    std::map<std::string, std::string> environment;
 
     bool loadFromFile(const std::string& filename);
 
