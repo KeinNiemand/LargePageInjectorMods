@@ -88,6 +88,7 @@ int wmain(int argc, wchar_t* argv[])
 
 	//Setup enviroment variables from config
 	for (auto& [key, value] : config.environment) {
+		
 		//Use windows API to set enviroment variables make sure child procceses inherit
 		SetEnvironmentVariableA(key.c_str(), value.c_str());
 	}
