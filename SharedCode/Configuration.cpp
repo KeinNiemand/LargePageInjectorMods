@@ -9,6 +9,8 @@ import <vector>;
 import <string>;
 import <iostream>;
 import <fstream>;
+import Logger; // Import Logger
+
 
 bool Configuration::loadFromFile(const std::string& filename)
 {
@@ -25,6 +27,9 @@ bool Configuration::loadFromFile(const std::string& filename)
 
         // Parse Verbosity
         verbosity = toml::find_or<int>(data, "Verbosity", 0);
+
+        // Set verbosity in Logger
+        Logger::SetVerbosity(verbosity);
 
         // Parse RedirectConsoleOutput
         redirectConsoleOutput = toml::find_or<bool>(data, "RedirectConsoleOutput", false);

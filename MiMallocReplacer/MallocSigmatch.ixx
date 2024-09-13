@@ -6,6 +6,7 @@ export import <unordered_map>;
 export import <vector>;
 export import <string>;
 import <iostream>;
+import Logger;
 
 export enum class MiMallocReplacedFunctions
 {
@@ -155,8 +156,8 @@ public:
 		sigmatch::this_process_target target;
 		sigmatch::search_result result = target.in_module(moduleName).search(functionSignatureMap[function]);
 
-		if (result.matches().size() > 1)
-			std::cout << "MiMallocReplacer.dll: WARNING: function in module " << moduleName << " Found more then once." << std::endl;
+		Logger::Log(Logger::Level::Warning, "MiMallocReplacer.dll: WARNING: function in module " + moduleName + " found more than once.");
+
 
 		if (result.matches().size() > 0) {
 			//Just return the first match for now
@@ -165,7 +166,7 @@ public:
 			}
 		}
 		else {
-			std::cout << "MiMallocReplacer.dll: WARNING: No Matches Found for function " << (int)function << " In Module :" << moduleName << std::endl;
+			Logger::Log(Logger::Level::Warning, "MiMallocReplacer.dll: WARNING: No matches found for function " + std::to_string(static_cast<int>(function)) + " in module: " + moduleName);
 		}
 
 

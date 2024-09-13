@@ -170,6 +170,8 @@
     <ClCompile Include="Configuration.cpp" />
     <ClCompile Include="Configuration.ixx" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Logger.ixx" />
+    <ClCompile Include="Logger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />

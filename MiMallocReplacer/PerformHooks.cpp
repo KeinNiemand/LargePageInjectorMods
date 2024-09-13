@@ -8,6 +8,7 @@
 
 import MallocSigmatch;
 import Configuration;
+import Logger;
 
 void* AllocatePageNearAddress(void* targetAddr)
 {
@@ -194,21 +195,22 @@ extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteI
 		RedirectOutputToInjectorPipe();
 	}
 
-	if (config.verbosity >= 4)
-		std::cout << "MiMallocReplacer.dll: Injected, Trying to Perform Hooks for malloc functions" << std::endl;
+	Logger::Log(Logger::Level::Info, "MiMallocReplacer.dll: Injected, Trying to Perform Hooks for malloc functions");
+
 
 	//Perform hooks
 	for (auto moduleName : config.modulesToPatch) {
-		if (config.verbosity >= 4)
-			std::cout << "MiMallocReplacer.dll: Raplcing malloc function in:" << moduleName << std::endl;
+		Logger::Log(Logger::Level::Info, "MiMallocReplacer.dll: Replacing malloc function in: " + moduleName);
 		HookAllMallocFunctions(moduleName);
 	}
 
 	//Beep and/or log if enabled
-	if (config.enableBeep)
+	if (config.enableBeep) {
 		Beep(1000, 100);
-	if (config.verbosity >= 4)
-		std::cout << "MiMallocReplacer.dll: Hooking Complete, proceding with application execution\r\n" << std::endl;
+	}
+
+	Logger::Log(Logger::Level::Info, "MiMallocReplacer.dll: Hooking Complete, proceeding with application execution");
+
 
 	//Let the game run
 	RhWakeUpProcess();

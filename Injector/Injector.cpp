@@ -4,6 +4,7 @@
 #include <string>
 
 import Configuration;
+import Logger;
 HANDLE createPipe() {
 	// Create a named pipe
 	HANDLE pipe = CreateNamedPipe(
@@ -30,7 +31,7 @@ std::wstring getExecutableFolderPath() {
 	//NTFS technical max path length, I know this is overkill (normally MAX_PATH 260 is enough)
 	//but large path aware applications can have longer paths so this makes it easier to enable large path support if I want to in the future
 	constexpr size_t bufferSize = 65535; 
-	auto buffer = std::make_unique<wchar_t[]>(bufferSize);
+	auto buffer = std::unique_ptr<wchar_t[]>(new wchar_t[](bufferSize));
 	DWORD size = GetModuleFileNameW(NULL, buffer.get(), bufferSize);
 	if (size == 0) {
 		// Handle error, GetLastError() can be used to get error details
@@ -107,15 +108,15 @@ int wmain(int argc, wchar_t* argv[])
 	);
 	
 	//TODO: Replace all these verbosity checks with a simple logger
-	if (nt != 0 && config.verbosity >= 1)
+	if (nt != 0)
 	{
-		printf("RhInjectLibrary failed with error code = %d\n", nt);
+		Logger::Log(Logger::Level::Error, "RhInjectLibrary failed with error code = " + std::to_string(nt));
 		PWCHAR err = RtlGetLastErrorString();
-		std::wcout << err << "\n";
+		Logger::Log(Logger::Level::Error, std::wstring(err));
 	}
 	else if(config.verbosity >= 4)
 	{
-		std::wcout << L"Library injected successfully.\n";
+		Logger::Log(Logger::Level::Info, L"Library injected successfully.");
 	}
 
 
@@ -123,15 +124,12 @@ int wmain(int argc, wchar_t* argv[])
 	if (config.redirectConsoleOutput) {
 		BOOL connected = ConnectNamedPipe(pipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
 		if (!connected) {
-			if (config.verbosity >= 1)
-				std::cerr << "Failed to connect to pipe" << std::endl;
-
+			Logger::Log(Logger::Level::Error, "Failed to connect to pipe");
 			CloseHandle(pipe);
 			return 1;
 		}
 
-		if (config.verbosity >= 4)
-			std::wcout << L"Child process connected. Reading data...\n";
+		Logger::Log(Logger::Level::Info, L"Child process connected. Reading data...");
 		// Read data from the pipe and output the result (output stdout of launched game)
 		DWORD bytesRead;
 		char buffer[1000];
@@ -141,8 +139,7 @@ int wmain(int argc, wchar_t* argv[])
 		}
 
 		CloseHandle(pipe);
-		if (config.verbosity >= 4)
-			std::wcout << L"Pipe Closed";
+		Logger::Log(Logger::Level::Info, L"Pipe Closed");
 
 	}
 	
