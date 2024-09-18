@@ -1,0 +1,30 @@
+# Path to the game/application executable to launch
+LaunchPath = "Factorio.exe"  # For Factorio
+
+# Modules (DLLs or EXEs) to patch with mimalloc
+ModulesToPatch = [
+    "Factorio.exe",  # The main executable
+    # Add other modules if needed
+    # "example.dll",
+]
+
+# Verbosity level (0-4)
+Verbosity = 1  # 0 = Silent, 1 = Errors, 2 = Warnings, 3 = Info, 4 = Debug
+
+# Redirect console output to Injector (true/false) Required to see console output
+RedirectConsoleOutput = true
+
+# Enable beep sound after injection (true/false)
+EnableBeep = true  # Set to false to disable
+
+# Environment variables to set
+[Environment]
+#Amount of RAM in GB allocated to Large Pages set to 0 to disable huge pages
+#See readme for recommended values for your ram size 
+MIMALLOC_RESERVE_HUGE_OS_PAGES = "8"
+#Various Mimalloc Env vars which may boost performance. Comment these out if you don't want them
+MIMALLOC_ARENA_EAGER_COMMIT = "1"
+#Thse two should do the same things but some mimalloc docs say one or the other so I set both)
+MIMALLOC_PURGE_DELAY = "10000"
+MIMALLOC_RESET_DELAY = "10000"
+# Add Any other environment variables here

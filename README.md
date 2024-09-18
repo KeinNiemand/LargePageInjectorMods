@@ -25,11 +25,6 @@ The LargePageInjectorMods can provide a substantial performance boost (Performan
   
 - Please note that the performance increase can varry dratically based on your save (Performanc increase should be bigger the later in the game you are and the heavier the save is), your hardware(generally there bigger performacne gains on weaker hardware), what mods your using and more. Your performance gains may me significantly smaller or larger then anything mentioned above. Somone with weaker hardware did report getting an 80% Performance increase so large gains are not impossible.
 
-### Additional Performance Settings
-Setting the environment variable `MIMALLOC_ARENA_EAGER_COMMIT` to 1 may further help with performance. This setting does not require enabling Large Pages and can be tested for its impact on the game. I have this enviourment variable set and have not tested the mod without it, it might do nothing to help performance but it's unlikly that it hurts performance.
-
-Setting the enviorument `MIMALLOC_PURGE_DELAY` to a value >10 (probably something like 100-10000) might also help at the cost of additional ram usage. This has not been tested.
-
 ### Standard Installation
 1. **Download the Mod**: Download the ZIP file for your Game/Game version from [Releases Page](https://github.com/KeinNiemand/LargePageInjectorMods/releases).  
    Disclaimer: Some Antivirus (including Windows Defender) may falsely detect Injector.exe to be maleware, this is a false positive caused becouse antiviruses see dll injection as suspious. You can read the source code and compile it yourself if you don't trust me.
@@ -56,8 +51,8 @@ This privilege is necessary for enabling Large Pages and can be granted through 
 
 For more detailed instructions, refer to the [Microsoft documentation](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/lock-pages-in-memory).
 
-#### 2. Set Environment Variable
-Set the `MIMALLOC_RESERVE_HUGE_OS_PAGES` environment variable to 2 or higher. This value represents the GB of Large Pages to reserve, ideally more than the RAM typically used by Stellaris.
+#### 2. Set RAM used for Large Pages  Variable
+Set the `MIMALLOC_RESERVE_HUGE_OS_PAGES` variable in LargePageInjectormods.toml to 1 or higher (default is 8). This value represents the GB of Large Pages to reserve, ideally more than the RAM typically used by the Game/Application your trying to run.
 
 #### 3. System Requirements and Recommendations
 - **Less than 16GB of RAM**: Large Pages may not be effective.
@@ -72,12 +67,14 @@ This mod uses the following third-party libraries:
 - **Sigmatch**: [Sigmatch GitHub](https://github.com/SpriteOvO/sigmatch)
 - **EasyHook**: [EasyHook GitHub](https://github.com/EasyHook/EasyHook)
 - **Hooking by Example** (Not A Library but I copied some of the functions) [Hooking By Example Github](https://github.com/khalladay/hooking-by-example)
+- **Toml11**: [Toml11 GitHub](https://github.com/ToruNiina/toml11)
 
 ### 3rd Party Licenses
 - **Mimalloc License**: [Mimalloc License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/MIMALLOC_LICENCE.txt)
 - **Sigmatch License**: [Sigmatch License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/sigmatch_LICENSE.txt)
 - **EasyHook License**: [EasyHook License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt)
 - **Hooking by Example Licence**: [Hooking by Example Licence](https://github.com/khalladay/hooking-by-example/blob/master/LICENSE)
+- **Toml11 Licence**: [Toml11 Licence](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/toml11_LICENSE.txt)
 
 ## Compatibility
   
@@ -89,16 +86,43 @@ This mod has been tested for the list but might also work for other games provid
 Please don't report any Issues related to unsupored application that don't work unless you have a pull requests that makes them work.
 It should be compatible with all other mods for the supported games. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
 
-## Config Format
+## Configuration File Format
 
-The config File has to be called LargePageInjectorMods.config, sample configs are provided [here](https://github.com/KeinNiemand/LargePageInjectorMods/tree/master/configs), to use a sample config you have to rename it. The config file has to be in the same folder as Injector.exe and the game/application that get's launched.  
+The configuration file must be named `LargePageInjectorMods.toml`. Sample configs are provided in the `configs` folder. To use a sample config, rename it to `LargePageInjectorMods.toml`. The config file must be in the same folder as `Injector.exe` and the game/application that gets launched.
 
-The first line in the config it the name of the exe file that the Injector runs.
+### Example Configuration (`LargePageInjectorMods.toml`)
 
-All other lines in the config are the modules that malloc should get replaced in, normally the second line should be the same as the first line so malloc get's replaced with mimalloc in the game/application itself.  
-After that should be list all dlls (one per line) that malloc should be replaced in, if any dlls have their own internal malloc (statically link to it) they should be added one line at a time after the second line.
+```toml
+# Path to the game/application executable to launch
+LaunchPath = "stellaris.exe"  # For Stellaris
+# LaunchPath = "factorio.exe"  # Uncomment for Factorio
 
-Contributions for working config files for other games/application are welcome. Make sure that mimalloc is actually used by the game, if it's never found in the game it will just run ayways.
+# Modules (DLLs or EXEs) to patch with mimalloc
+ModulesToPatch = [
+    "stellaris.exe",  # The main executable
+    # Add other modules if needed
+    # "example.dll",
+]
+
+# Verbosity level (0-4)
+Verbosity = 0  # 0 = Silent, 1 = Errors, 2 = Warnings, 3 = Info, 4 = Debug
+
+# Redirect console output to Injector (true/false)
+RedirectConsoleOutput = true  # Set to true to enable
+
+# Enable beep sound after injection (true/false)
+EnableBeep = true  # Set to false to disable
+
+# Environment variables to set
+[Environment]
+#Amount of RAM in GB allocated to Large Pages set to 0 to disable huge pages 
+MIMALLOC_RESERVE_HUGE_OS_PAGES = "8"
+#Various Mimalloc Env vars which may boost performance
+MIMALLOC_ARENA_EAGER_COMMIT = "1"
+MIMALLOC_PURGE_DELAY = "10000"
+MIMALLOC_RESET_DELAY = "10000"
+```
+
 ## Contributing
 Contributions to the LargePageInjectorMods are welcome! If you have suggestions for improvements or bug fixes, feel free to fork this repository and submit a pull request.
 
@@ -106,7 +130,7 @@ Contributions to the LargePageInjectorMods are welcome! If you have suggestions 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/LICENSE) file for details.
 
 ## Acknowledgements
-- Thanks to the Stellaris team for their engaging game.
+- Thanks to the Stellaris and teams for their engaging games.
 - Kudos to Microsoft for developing the `mimalloc` allocator.
 - Special thanks to the developers of Sigmatch and EasyHook for their contributions to the software community.
 

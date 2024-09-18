@@ -1,0 +1,28 @@
+# Path to the game/application executable to launch
+LaunchPath = "stellaris.exe"  # For Stellaris
+
+# Modules (DLLs or EXEs) to patch with mimalloc
+ModulesToPatch = [
+    "stellaris.exe",  # The main executable
+    # Add other modules if needed
+    # "example.dll",
+]
+
+# Verbosity level (0-4)
+Verbosity = 1  # 0 = Silent, 1 = Errors, 2 = Warnings, 3 = Info, 4 = Debug
+
+# Redirect console output to Injector (true/false)
+RedirectConsoleOutput = false  # Disable console output redirection for Stellaris since it breaks launcher
+
+# Enable beep sound after injection (true/false)
+EnableBeep = true  # Set to false to disable
+
+# Environment variables to set
+[Environment]
+# Set mimalloc environment variables here
+#Amount of RAM in GB allocated to Large Pages set to 0 to disable huge pages 
+MIMALLOC_RESERVE_HUGE_OS_PAGES = "8"
+#Various Mimalloc Env vars which may boost performance
+MIMALLOC_ARENA_EAGER_COMMIT = "1"
+MIMALLOC_PURGE_DELAY = "10000"
+MIMALLOC_RESET_DELAY = "10000"
