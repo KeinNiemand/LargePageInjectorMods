@@ -6,6 +6,10 @@
 #include <fcntl.h>
 #include <io.h>
 
+// EasyHook will be looking for this export to support DLL injection. If not found then 
+// DLL injection will fail.
+extern "C" void __declspec(dllexport) __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteInfo);
+
 import MallocSigmatch;
 import Configuration;
 import Logger;

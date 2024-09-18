@@ -30,8 +30,8 @@ std::wstring getExecutableFolderPath() {
 
 	//NTFS technical max path length, I know this is overkill (normally MAX_PATH 260 is enough)
 	//but large path aware applications can have longer paths so this makes it easier to enable large path support if I want to in the future
-	constexpr size_t bufferSize = 65535; 
-	auto buffer = std::unique_ptr<wchar_t[]>(new wchar_t[](bufferSize));
+	constexpr size_t bufferSize = 65535;
+	auto buffer = std::make_unique<wchar_t[]>(bufferSize);
 	DWORD size = GetModuleFileNameW(NULL, buffer.get(), bufferSize);
 	if (size == 0) {
 		// Handle error, GetLastError() can be used to get error details
@@ -43,9 +43,10 @@ std::wstring getExecutableFolderPath() {
 	// Find the last backslash in the path to separate the folder path
 	size_t pos = path.find_last_of(L"\\/");
 	if (pos != std::wstring::npos) {
-		return path.substr(0, pos);
+		return path.substr(0, pos + 1);
 	}
 
+	std::wcerr << L"Error when trying to get executable folder path" << L"\r\n";
 	return nullptr;
 }
 
@@ -68,13 +69,15 @@ int wmain(int argc, wchar_t* argv[])
 
 	//Change Current Directory to Executuabel Folder this is probably not the best solution but might work
 	//TODO: instead of changing direcotry maybe use absolute paths instead (including a way run the exe from in exectuable folder if a relative path is passed into the config) or rdstore path
-	{
-		std::wstring executableFolderPath = getExecutableFolderPath();
-		_wchdir(executableFolderPath.c_str());
-	}
+
+	std::wstring executableFolderPath = getExecutableFolderPath();
+	_wchdir(executableFolderPath.c_str());
+
 	//Load config
 	Configuration config;
 	config.loadFromFile(".\\LargePageInjectorMods.toml");
+
+	Logger::Log(Logger::Level::Debug, L"exe path = " + config.LaunchPath);
 
 	const WCHAR* exeName = config.LaunchPath.c_str();
 	ULONG procIdVar = 0;
@@ -89,11 +92,11 @@ int wmain(int argc, wchar_t* argv[])
 
 	//Setup enviroment variables from config
 	for (auto& [key, value] : config.environment) {
-		
+
 		//Use windows API to set enviroment variables make sure child procceses inherit
 		SetEnvironmentVariableA(key.c_str(), value.c_str());
 	}
-	
+
 	//Run the process and inject the dll
 	NTSTATUS nt = RhCreateAndInject(
 		(WCHAR*)exeName,
@@ -106,7 +109,7 @@ int wmain(int argc, wchar_t* argv[])
 		0, //0 Pass trough size
 		procId //Store Created Proc Id
 	);
-	
+
 	//TODO: Replace all these verbosity checks with a simple logger
 	if (nt != 0)
 	{
@@ -114,7 +117,7 @@ int wmain(int argc, wchar_t* argv[])
 		PWCHAR err = RtlGetLastErrorString();
 		Logger::Log(Logger::Level::Error, std::wstring(err));
 	}
-	else if(config.verbosity >= 4)
+	else if (config.verbosity >= 4)
 	{
 		Logger::Log(Logger::Level::Info, L"Library injected successfully.");
 	}
@@ -142,7 +145,7 @@ int wmain(int argc, wchar_t* argv[])
 		Logger::Log(Logger::Level::Info, L"Pipe Closed");
 
 	}
-	
-	
+
+
 	return 0;
 }
