@@ -1,10 +1,13 @@
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #include <vector>
 #include <iostream>
-#include <easyhook.h>
 #include <string>
 
 import Configuration;
 import Logger;
+import DllInjector;
+
 HANDLE createPipe() {
 	// Create a named pipe
 	HANDLE pipe = CreateNamedPipe(
@@ -97,31 +100,14 @@ int wmain(int argc, wchar_t* argv[])
 		SetEnvironmentVariableA(key.c_str(), value.c_str());
 	}
 
-	//Run the process and inject the dll
-	NTSTATUS nt = RhCreateAndInject(
-		(WCHAR*)exeName,
-		(WCHAR*)passTroughArgument.c_str(),
-		HIGH_PRIORITY_CLASS, //Process Creation Options
-		EASYHOOK_INJECT_DEFAULT,
-		nullptr, //No 32bit dll
-		(WCHAR*)dllToInject,
-		nullptr, //No pass trough buffer
-		0, //0 Pass trough size
-		procId //Store Created Proc Id
-	);
-
-	//TODO: Replace all these verbosity checks with a simple logger
-	if (nt != 0)
-	{
-		Logger::Log(Logger::Level::Error, "RhInjectLibrary failed with error code = " + std::to_string(nt));
-		PWCHAR err = RtlGetLastErrorString();
-		Logger::Log(Logger::Level::Error, std::wstring(err));
-	}
-	else if (config.verbosity >= 4)
-	{
+	try {
+		createSuspendedProcessAndInject(config.LaunchPath, passTroughArgument, dllToInject);
 		Logger::Log(Logger::Level::Info, L"Library injected successfully.");
 	}
-
+	catch (std::exception ex) {
+		Logger::Log(Logger::Level::Error, "Dll Inection Failed: "s + ex.what());
+		return 1;
+	}
 
 	// Wait for the child process to connect
 	if (config.redirectConsoleOutput) {

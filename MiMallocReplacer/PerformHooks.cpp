@@ -1,14 +1,12 @@
+#include "PerformHooks.hpp"
+
 #include <mimalloc.h>
 #include "framework.h"
-#include <easyhook.h>
 #include <string>
 #include <iostream>
 #include <fcntl.h>
 #include <io.h>
 
-// EasyHook will be looking for this export to support DLL injection. If not found then 
-// DLL injection will fail.
-extern "C" void __declspec(dllexport) __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteInfo);
 
 import MallocSigmatch;
 import Configuration;
@@ -181,10 +179,10 @@ void RedirectOutputToInjectorPipe() {
 
 // EasyHook will be looking for this export to support DLL injection. If not found then 
 // DLL injection will fail.
-extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteInfo)
+ void  PerformHooks()
 {
 
-
+	 
 #ifdef DEBUG
 	Sleep(10000);
 #endif
@@ -198,7 +196,7 @@ extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteI
 	if (config.redirectConsoleOutput) {
 		RedirectOutputToInjectorPipe();
 	}
-
+	
 	Logger::Log(Logger::Level::Info, "MiMallocReplacer.dll: Injected, Trying to Perform Hooks for malloc functions");
 
 
@@ -215,9 +213,6 @@ extern "C" void __stdcall NativeInjectionEntryPoint(REMOTE_ENTRY_INFO* inRemoteI
 
 	Logger::Log(Logger::Level::Info, "MiMallocReplacer.dll: Hooking Complete, proceeding with application execution");
 
-
-	//Let the game run
-	RhWakeUpProcess();
 	return;
 }
 

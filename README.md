@@ -65,14 +65,12 @@ Set the `MIMALLOC_RESERVE_HUGE_OS_PAGES` variable in LargePageInjectormods.toml 
 This mod uses the following third-party libraries:
 - **Mimalloc**: [Mimalloc GitHub](https://github.com/microsoft/mimalloc)
 - **Sigmatch**: [Sigmatch GitHub](https://github.com/SpriteOvO/sigmatch)
-- **EasyHook**: [EasyHook GitHub](https://github.com/EasyHook/EasyHook)
 - **Hooking by Example** (Not A Library but I copied some of the functions) [Hooking By Example Github](https://github.com/khalladay/hooking-by-example)
 - **Toml11**: [Toml11 GitHub](https://github.com/ToruNiina/toml11)
 
 ### 3rd Party Licenses
 - **Mimalloc License**: [Mimalloc License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/MIMALLOC_LICENCE.txt)
 - **Sigmatch License**: [Sigmatch License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/sigmatch_LICENSE.txt)
-- **EasyHook License**: [EasyHook License](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/EASYHOOK_LICENCE.txt)
 - **Hooking by Example Licence**: [Hooking by Example Licence](https://github.com/khalladay/hooking-by-example/blob/master/LICENSE)
 - **Toml11 Licence**: [Toml11 Licence](https://github.com/KeinNiemand/LargePageInjectorMods/blob/master/3rdPartyLicences/toml11_LICENSE.txt)
 
@@ -132,7 +130,7 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 ## Acknowledgements
 - Thanks to the Stellaris and teams for their engaging games.
 - Kudos to Microsoft for developing the `mimalloc` allocator.
-- Special thanks to the developers of Sigmatch and EasyHook for their contributions to the software community.
+- Special thanks to the developers of Sigmatch for their contributions to the software community.
 
 ## Disclaimer
 This mod is not officially endorsed by the creators of Stellaris. Use at your own risk.
