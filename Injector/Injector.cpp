@@ -1,4 +1,4 @@
-#define WIN32_LEAN_AND_MEAN
+﻿#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <thread>
 #include <iostream>
@@ -135,7 +135,7 @@ int wmain(int argc, wchar_t* argv[])
 
     // Possibly set environment variables from config
     for (auto& [key, value] : config.environment) {
-        SetEnvironmentVariableA(key.c_str(), value.c_str());
+        SetEnvironmentVariableW(key.c_str(), value.c_str());
     }
 
     // Create named pipe + reading thread FIRST if user wants console redirection
@@ -152,7 +152,7 @@ int wmain(int argc, wchar_t* argv[])
     DWORD pid = createSuspendedProcessAndInject(
         config.LaunchPath,    // EXE
         passTroughArgument,   // Args
-        L"MiMallocReplacer.dll"  // The DLL (relative or absolute)
+        L"MiMallocReplacer.DLL"s  // The DLL (relative or absolute)
     );
 
     if (pid == 0) {

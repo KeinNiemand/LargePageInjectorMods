@@ -10,6 +10,8 @@ export module DllInjector;
 
 import Logger;
 
+using namespace std::string_literals;
+
 //
 // A small RAII wrapper to close a handle automatically on scope exit.
 //
@@ -164,7 +166,7 @@ export DWORD createSuspendedProcessAndInject(
         return 0;
     }
 
-    Logger::Log(Logger::Level::Debug, L"DLL path successfully written to remote memory.");
+    Logger::Log(Logger::Level::Debug, L"DLL path successfully written to remote memory. ("s + std::to_wstring(bytesWritten) + L" bytes)"s);
 
     // -------------------------
     // STEP 4: Create remote thread in the suspended process to call LoadLibraryW
@@ -190,7 +192,7 @@ export DWORD createSuspendedProcessAndInject(
         return 0;
     }
 
-    Logger::Log(Logger::Level::Debug, L"Creating remote thread to call LoadLibraryW...");
+    Logger::Log(Logger::Level::Debug, L"Creating remote thread to call LoadLibraryW..."s + L"Address:"s + std::to_wstring((long long)loadLibraryAddr));
     HANDLE remoteThread = CreateRemoteThread(
         processHandle.handle,
         nullptr,

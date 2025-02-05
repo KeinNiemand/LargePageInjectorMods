@@ -13,7 +13,7 @@ public:
     int verbosity = 0; // Default verbosity level
     bool redirectConsoleOutput = false; // Default to false
     bool enableBeep = false; // Default to false
-    std::map<std::string, std::string> environment;
+    std::map<std::wstring, std::wstring> environment;
 
     bool loadFromFile(const std::string& filename);
 

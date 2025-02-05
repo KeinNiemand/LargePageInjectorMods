@@ -41,7 +41,7 @@ bool Configuration::loadFromFile(const std::string& filename)
         if (data.contains("Environment")) {
             auto env_table = toml::find<toml::table>(data, "Environment");
             for (const auto& [key, value] : env_table) {
-                environment[key] = toml::get<std::string>(value);
+                environment[utf8_to_wstring(key)] = utf8_to_wstring(toml::get<std::string>(value));
             }
         }
 
