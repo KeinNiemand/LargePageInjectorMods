@@ -206,10 +206,8 @@
     <ResourceCompile Include="MiMallocReplacer.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Lib\Submodules\mimalloc\ide\vs2022\mimalloc-override.vcxproj">
+    <ProjectReference Include="..\Lib\Submodules\mimalloc\ide\vs2022\mimalloc-override-dll.vcxproj">
       <Project>{abb5eae7-b3e6-432e-b636-333449892ea7}</Project>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
-      <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
     </ProjectReference>
     <ProjectReference Include="..\SharedCode\SharedCode.vcxproj">
       <Project>{9aed6d33-21d7-4b20-b8d4-9b058e529e69}</Project>

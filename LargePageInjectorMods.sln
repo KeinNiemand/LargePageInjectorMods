@@ -12,12 +12,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Injector", "Injector\Inject
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SharedCode", "SharedCode\SharedCode.vcxproj", "{9AED6D33-21D7-4B20-B8D4-9B058E529E69}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mimalloc", "Lib\Submodules\mimalloc\ide\vs2022\mimalloc.vcxproj", "{ABB5EAE7-B3E6-432E-B636-333449892EA6}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mimalloc-lib", "Lib\Submodules\mimalloc\ide\vs2022\mimalloc-lib.vcxproj", "{C4337A49-C3F4-492D-9995-C7F1405B5C54}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mimalloc-override", "Lib\Submodules\mimalloc\ide\vs2022\mimalloc-override.vcxproj", "{ABB5EAE7-B3E6-432E-B636-333449892EA7}"
-	ProjectSection(ProjectDependencies) = postProject
-		{ABB5EAE7-B3E6-432E-B636-333449892EA6} = {ABB5EAE7-B3E6-432E-B636-333449892EA6}
-	EndProjectSection
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mimalloc-override-dll", "Lib\Submodules\mimalloc\ide\vs2022\mimalloc-override-dll.vcxproj", "{E3D4BD29-9A10-4911-876A-D2F7DA8C98F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,22 +48,22 @@ Global
 		{9AED6D33-21D7-4B20-B8D4-9B058E529E69}.Release|x64.Build.0 = Release|x64
 		{9AED6D33-21D7-4B20-B8D4-9B058E529E69}.Release|x86.ActiveCfg = Release|Win32
 		{9AED6D33-21D7-4B20-B8D4-9B058E529E69}.Release|x86.Build.0 = Release|Win32
-		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Debug|x64.ActiveCfg = Debug|x64
-		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Debug|x64.Build.0 = Debug|x64
-		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Debug|x86.ActiveCfg = Debug|Win32
-		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Debug|x86.Build.0 = Debug|Win32
-		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Release|x64.ActiveCfg = Release|x64
-		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Release|x64.Build.0 = Release|x64
-		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Release|x86.ActiveCfg = Release|Win32
-		{ABB5EAE7-B3E6-432E-B636-333449892EA6}.Release|x86.Build.0 = Release|Win32
-		{ABB5EAE7-B3E6-432E-B636-333449892EA7}.Debug|x64.ActiveCfg = Debug|x64
-		{ABB5EAE7-B3E6-432E-B636-333449892EA7}.Debug|x64.Build.0 = Debug|x64
-		{ABB5EAE7-B3E6-432E-B636-333449892EA7}.Debug|x86.ActiveCfg = Debug|Win32
-		{ABB5EAE7-B3E6-432E-B636-333449892EA7}.Debug|x86.Build.0 = Debug|Win32
-		{ABB5EAE7-B3E6-432E-B636-333449892EA7}.Release|x64.ActiveCfg = Release|x64
-		{ABB5EAE7-B3E6-432E-B636-333449892EA7}.Release|x64.Build.0 = Release|x64
-		{ABB5EAE7-B3E6-432E-B636-333449892EA7}.Release|x86.ActiveCfg = Release|Win32
-		{ABB5EAE7-B3E6-432E-B636-333449892EA7}.Release|x86.Build.0 = Release|Win32
+		{C4337A49-C3F4-492D-9995-C7F1405B5C54}.Debug|x64.ActiveCfg = Debug|x64
+		{C4337A49-C3F4-492D-9995-C7F1405B5C54}.Debug|x64.Build.0 = Debug|x64
+		{C4337A49-C3F4-492D-9995-C7F1405B5C54}.Debug|x86.ActiveCfg = Debug|Win32
+		{C4337A49-C3F4-492D-9995-C7F1405B5C54}.Debug|x86.Build.0 = Debug|Win32
+		{C4337A49-C3F4-492D-9995-C7F1405B5C54}.Release|x64.ActiveCfg = Release|x64
+		{C4337A49-C3F4-492D-9995-C7F1405B5C54}.Release|x64.Build.0 = Release|x64
+		{C4337A49-C3F4-492D-9995-C7F1405B5C54}.Release|x86.ActiveCfg = Release|Win32
+		{C4337A49-C3F4-492D-9995-C7F1405B5C54}.Release|x86.Build.0 = Release|Win32
+		{E3D4BD29-9A10-4911-876A-D2F7DA8C98F6}.Debug|x64.ActiveCfg = Debug|x64
+		{E3D4BD29-9A10-4911-876A-D2F7DA8C98F6}.Debug|x64.Build.0 = Debug|x64
+		{E3D4BD29-9A10-4911-876A-D2F7DA8C98F6}.Debug|x86.ActiveCfg = Debug|Win32
+		{E3D4BD29-9A10-4911-876A-D2F7DA8C98F6}.Debug|x86.Build.0 = Debug|Win32
+		{E3D4BD29-9A10-4911-876A-D2F7DA8C98F6}.Release|x64.ActiveCfg = Release|x64
+		{E3D4BD29-9A10-4911-876A-D2F7DA8C98F6}.Release|x64.Build.0 = Release|x64
+		{E3D4BD29-9A10-4911-876A-D2F7DA8C98F6}.Release|x86.ActiveCfg = Release|Win32
+		{E3D4BD29-9A10-4911-876A-D2F7DA8C98F6}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
