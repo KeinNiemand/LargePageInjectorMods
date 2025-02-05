@@ -8,6 +8,8 @@ export import <string>;
 import <iostream>;
 import Logger;
 
+using namespace std::string_literals;
+
 export enum class MiMallocReplacedFunctions
 {
 	malloc,
@@ -156,7 +158,7 @@ public:
 		sigmatch::this_process_target target;
 		sigmatch::search_result result = target.in_module(moduleName).search(functionSignatureMap[function]);
 
-		Logger::Log(Logger::Level::Warning, "MiMallocReplacer.dll: WARNING: function in module " + moduleName + " found more than once.");
+		Logger::Log(Logger::Level::Warning, "MiMallocReplacer.dll: WARNING: function ("s + std::to_string(static_cast<int>(function)) + ") in module "s + moduleName + " found more than once.");
 
 
 		if (result.matches().size() > 0) {

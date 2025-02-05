@@ -4,8 +4,11 @@ module;
 #include <string>
 #include <stdexcept>
 #include <iostream>
+#include <sstream>
 
 export module DllInjector;
+
+import Logger;
 
 //
 // A small RAII wrapper to close a handle automatically on scope exit.
@@ -49,19 +52,31 @@ struct HandleWrapper {
 };
 
 //
+// Utility to format GetLastError() codes into a string
+//
+static std::string getLastErrorString(DWORD err) {
+    std::ostringstream oss;
+    oss << " (GLE=0x" << std::hex << err << ")";
+    return oss.str();
+}
+
+//
 // Exported function that will:
 // 1. Create a process suspended,
 // 2. Inject the DLL via remote thread calling LoadLibraryW,
 // 3. Resume the main thread.
 //
-// Returns the PID of the newly created process if successful, or throws on failure.
+// Returns the PID of the newly created process if successful.
+// Returns 0 on failure.
 //
 export DWORD createSuspendedProcessAndInject(
     const std::wstring& applicationPath, // The EXE to launch
     const std::wstring& commandLineArgs, // Any arguments to pass
-    const std::wstring& dllPath          // Full path to the DLL to inject
+    const std::wstring& dllPath          // Possibly relative path to the DLL
 )
 {
+    Logger::Log(Logger::Level::Debug, L"Beginning injection procedure...");
+
     // -------------------------
     // STEP 1: Create process in suspended mode
     // -------------------------
@@ -74,22 +89,31 @@ export DWORD createSuspendedProcessAndInject(
     // CreateProcessW expects non-const data, so we make a copy buffer:
     std::wstring mutableCommandLine = fullCommandLine;
 
-    // CREATE_SUSPENDED ensures the main thread isn't started yet
-    if (!CreateProcessW(
+    Logger::Log(Logger::Level::Debug, L"Creating process in suspended mode...");
+
+    BOOL createOk = CreateProcessW(
         applicationPath.c_str(),
         mutableCommandLine.data(),
         nullptr,   // default process security attributes
         nullptr,   // default thread security attributes
         FALSE,     // do not inherit handles
-        CREATE_SUSPENDED | HIGH_PRIORITY_CLASS, //Create suspended and has high priority (dosn't hurt for extra performance)
+        CREATE_SUSPENDED | HIGH_PRIORITY_CLASS, // suspended + high priority
         nullptr,   // use parent's environment block
         nullptr,   // use parent's current directory
         &si,
         &pi
-    ))
-    {
-        throw std::runtime_error("Failed to create process in suspended mode.");
+    );
+
+    if (!createOk) {
+        DWORD gle = GetLastError();
+        std::wostringstream oss;
+        oss << L"Failed to create process in suspended mode."
+            << getLastErrorString(gle).c_str();
+        Logger::Log(Logger::Level::Error, oss.str());
+        return 0;
     }
+
+    Logger::Log(Logger::Level::Debug, L"Process created successfully in suspended mode.");
 
     HandleWrapper processHandle(pi.hProcess);
     HandleWrapper threadHandle(pi.hThread);
@@ -99,6 +123,7 @@ export DWORD createSuspendedProcessAndInject(
     // -------------------------
     const size_t allocSize = (dllPath.size() + 1) * sizeof(wchar_t);
 
+    Logger::Log(Logger::Level::Debug, L"Allocating memory in remote process for DLL path...");
     LPVOID remoteMemory = VirtualAllocEx(
         processHandle.handle,
         nullptr,
@@ -108,39 +133,64 @@ export DWORD createSuspendedProcessAndInject(
     );
 
     if (!remoteMemory) {
-        throw std::runtime_error("Failed to allocate memory in remote process.");
+        DWORD gle = GetLastError();
+        std::wostringstream oss;
+        oss << L"Failed to allocate memory in remote process."
+            << getLastErrorString(gle).c_str();
+        Logger::Log(Logger::Level::Error, oss.str());
+        return 0;
     }
+
+    Logger::Log(Logger::Level::Debug, L"Memory allocated in remote process.");
 
     // -------------------------
     // STEP 3: Write the DLL path into the remote process
     // -------------------------
     SIZE_T bytesWritten = 0;
-    if (!WriteProcessMemory(
+    BOOL writeOk = WriteProcessMemory(
         processHandle.handle,
         remoteMemory,
         dllPath.c_str(),
         allocSize,
         &bytesWritten
-    ) || bytesWritten != allocSize)
-    {
-        throw std::runtime_error("Failed to write DLL path into the remote process memory.");
+    );
+
+    if (!writeOk || bytesWritten != allocSize) {
+        DWORD gle = GetLastError();
+        std::wostringstream oss;
+        oss << L"Failed to write DLL path into the remote process memory."
+            << getLastErrorString(gle).c_str();
+        Logger::Log(Logger::Level::Error, oss.str());
+        return 0;
     }
+
+    Logger::Log(Logger::Level::Debug, L"DLL path successfully written to remote memory.");
 
     // -------------------------
     // STEP 4: Create remote thread in the suspended process to call LoadLibraryW
     // -------------------------
-    // Get the address of LoadLibraryW in kernel32
+    Logger::Log(Logger::Level::Debug, L"Retrieving LoadLibraryW address from kernel32.dll...");
     HMODULE hKernel32 = GetModuleHandleW(L"kernel32.dll");
     if (!hKernel32) {
-        throw std::runtime_error("Failed to get handle of kernel32.dll.");
+        DWORD gle = GetLastError();
+        std::wostringstream oss;
+        oss << L"Failed to get handle of kernel32.dll."
+            << getLastErrorString(gle).c_str();
+        Logger::Log(Logger::Level::Error, oss.str());
+        return 0;
     }
 
     LPVOID loadLibraryAddr = reinterpret_cast<LPVOID>(GetProcAddress(hKernel32, "LoadLibraryW"));
     if (!loadLibraryAddr) {
-        throw std::runtime_error("Failed to find LoadLibraryW address in kernel32.dll.");
+        DWORD gle = GetLastError();
+        std::wostringstream oss;
+        oss << L"Failed to find LoadLibraryW address in kernel32.dll."
+            << getLastErrorString(gle).c_str();
+        Logger::Log(Logger::Level::Error, oss.str());
+        return 0;
     }
 
-    // Create a thread to run LoadLibraryW(remoteMemory)
+    Logger::Log(Logger::Level::Debug, L"Creating remote thread to call LoadLibraryW...");
     HANDLE remoteThread = CreateRemoteThread(
         processHandle.handle,
         nullptr,
@@ -152,28 +202,70 @@ export DWORD createSuspendedProcessAndInject(
     );
 
     if (!remoteThread) {
-        throw std::runtime_error("Failed to create remote thread in target process.");
+        DWORD gle = GetLastError();
+        std::wostringstream oss;
+        oss << L"Failed to create remote thread in target process."
+            << getLastErrorString(gle).c_str();
+        Logger::Log(Logger::Level::Error, oss.str());
+        return 0;
     }
 
     {
         HandleWrapper remoteThreadHandle(remoteThread);
-        // Wait for LoadLibraryW to finish
-        WaitForSingleObject(remoteThreadHandle.handle, INFINITE);
+        Logger::Log(Logger::Level::Debug, L"Waiting for remote thread to finish (LoadLibraryW)...");
+        DWORD waitRes = WaitForSingleObject(remoteThreadHandle.handle, INFINITE);
+        if (waitRes != WAIT_OBJECT_0) {
+            DWORD gle = GetLastError();
+            std::wostringstream oss;
+            oss << L"WaitForSingleObject on remote thread failed."
+                << getLastErrorString(gle).c_str();
+            Logger::Log(Logger::Level::Error, oss.str());
+            return 0;
+        }
+
+        // Check the exit code of the thread (return value of LoadLibraryW)
+        DWORD loadLibraryRet = 0;
+        if (GetExitCodeThread(remoteThreadHandle.handle, &loadLibraryRet)) {
+            if (loadLibraryRet == 0) {
+                Logger::Log(Logger::Level::Warning,
+                    L"Remote LoadLibraryW returned NULL. The DLL may not have loaded. "
+                    L"Check the DLL path or bitness of the process/DLL.");
+            }
+            else {
+                std::wostringstream oss2;
+                oss2 << L"Remote thread returned HMODULE=0x" << std::hex << loadLibraryRet
+                    << L" (LoadLibraryW success).";
+                Logger::Log(Logger::Level::Debug, oss2.str());
+            }
+        }
+        else {
+            DWORD gle = GetLastError();
+            std::wostringstream oss2;
+            oss2 << L"Could not retrieve remote thread exit code."
+                << getLastErrorString(gle).c_str();
+            Logger::Log(Logger::Level::Warning, oss2.str());
+        }
     }
 
-    // Optionally, you might want to verify the DLL loaded successfully by checking return value
-    // or hooking further. This is left out for brevity.
+    Logger::Log(Logger::Level::Debug, L"LoadLibraryW call complete in remote process.");
 
     // -------------------------
     // STEP 5: Resume the main thread so the target program can continue
     // -------------------------
-    if (ResumeThread(threadHandle.handle) == (DWORD)-1) {
-        throw std::runtime_error("Failed to resume the main thread of the target process.");
+    Logger::Log(Logger::Level::Debug, L"Resuming main thread of the process...");
+    DWORD resumeCount = ResumeThread(threadHandle.handle);
+    if (resumeCount == (DWORD)-1) {
+        DWORD gle = GetLastError();
+        std::wostringstream oss;
+        oss << L"Failed to resume the main thread of the target process."
+            << getLastErrorString(gle).c_str();
+        Logger::Log(Logger::Level::Error, oss.str());
+        return 0;
     }
 
-    // We intentionally don't close the process handle or thread handle here
-    // immediately, so the process can continue running. But the RAII wrapper
-    // will close them on function exit if desired.
+    std::wostringstream oss;
+    oss << L"DLL injection procedure completed. Target PID=" << pi.dwProcessId;
+    Logger::Log(Logger::Level::Info, oss.str());
 
     // Return the PID to the caller
     return pi.dwProcessId;
