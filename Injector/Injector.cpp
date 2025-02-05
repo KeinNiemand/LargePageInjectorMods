@@ -170,9 +170,11 @@ int wmain(int argc, wchar_t* argv[])
 
     // Example: Wait for the child to close by hooking WaitForSingleObject on pid, or do nothing.
     // You might do something like:
-    // HANDLE hProc = OpenProcess(SYNCHRONIZE, FALSE, pid);
-    // WaitForSingleObject(hProc, INFINITE);
-    // CloseHandle(hProc);
+    if (config.redirectConsoleOutput) {
+        HANDLE hProc = OpenProcess(SYNCHRONIZE, FALSE, pid);
+        WaitForSingleObject(hProc, INFINITE);
+        CloseHandle(hProc);
+    }
 
     // When done, tell the pipe thread to stop reading
     g_shouldStopPipeReading = true;
