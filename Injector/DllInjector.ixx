@@ -84,6 +84,27 @@ export DWORD createSuspendedProcessAndInject(
     // -------------------------
     STARTUPINFOW si{};
     si.cb = sizeof(si);
+    
+    SECURITY_ATTRIBUTES saAttr;
+    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+    saAttr.bInheritHandle = TRUE;
+    saAttr.lpSecurityDescriptor = NULL;
+
+
+    HANDLE pipe = CreateFile(
+        L"\\\\.\\pipe\\myoutputpipe",
+        GENERIC_WRITE,
+        0, // no sharing
+        &saAttr, // default security attributes
+        OPEN_EXISTING,
+        0, // default attributes
+        NULL); // no template file
+
+    si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+    si.hStdOutput = pipe;
+    si.hStdError = pipe;
+    si.dwFlags |= STARTF_USESTDHANDLES;
+
 
     PROCESS_INFORMATION pi{};
     std::wstring fullCommandLine = applicationPath + L" " + commandLineArgs;
@@ -98,7 +119,7 @@ export DWORD createSuspendedProcessAndInject(
         mutableCommandLine.data(),
         nullptr,   // default process security attributes
         nullptr,   // default thread security attributes
-        FALSE,     // do not inherit handles
+        TRUE,     // do inherit handles
         CREATE_SUSPENDED | HIGH_PRIORITY_CLASS, // suspended + high priority
         nullptr,   // use parent's environment block
         nullptr,   // use parent's current directory

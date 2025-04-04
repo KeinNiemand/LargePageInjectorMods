@@ -68,10 +68,10 @@ void pipeReaderThread(HANDLE pipeHandle)
 HANDLE createAsyncPipeReader()
 {
     // Create a named pipe
-    HANDLE pipe = CreateNamedPipe(
+    HANDLE pipe = CreateNamedPipeW(
         L"\\\\.\\pipe\\myoutputpipe",      // pipe name
         PIPE_ACCESS_INBOUND,               // read-only
-        PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT,
+        PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT | PIPE_REJECT_REMOTE_CLIENTS,
         1,                                 // one instance
         0,                                 // output buffer size
         0,                                 // input buffer size
@@ -84,7 +84,8 @@ HANDLE createAsyncPipeReader()
         Logger::Log(Logger::Level::Error, "Failed to create pipe");
         return nullptr;
     }
-
+    //Make sure the reading pipe handle is not inherited
+    SetHandleInformation(pipe, HANDLE_FLAG_INHERIT, 0);
     // Spawn the background thread that does ConnectNamedPipe + read loop
     std::thread t(pipeReaderThread, pipe);
     t.detach(); // or store the thread handle somewhere if you want to join later
@@ -140,7 +141,7 @@ int wmain(int argc, wchar_t* argv[])
 
     // Create named pipe + reading thread FIRST if user wants console redirection
     HANDLE pipeHandle = nullptr;
-    if (config.redirectConsoleOutput) {
+    if (true) {
         pipeHandle = createAsyncPipeReader();
         if (!pipeHandle) {
             Logger::Log(Logger::Level::Error, "Could not create pipe; continuing anyway...");
@@ -170,7 +171,7 @@ int wmain(int argc, wchar_t* argv[])
 
     // Example: Wait for the child to close by hooking WaitForSingleObject on pid, or do nothing.
     // You might do something like:
-    if (config.redirectConsoleOutput) {
+    if (TRUE) {
         HANDLE hProc = OpenProcess(SYNCHRONIZE, FALSE, pid);
         WaitForSingleObject(hProc, INFINITE);
         CloseHandle(hProc);
