@@ -10,7 +10,8 @@ import Logger;
 import DllInjector;
 
 // Global (or pass via a struct) to signal the pipe thread to stop if needed
-std::atomic_bool g_shouldStopPipeReading{ false };
+static std::atomic_bool g_shouldStopPipeReading{ false };
+static std::jthread pipeReaderJThread;
 
 //
 // A simple thread function that:
@@ -60,37 +61,56 @@ void pipeReaderThread(HANDLE pipeHandle)
     CloseHandle(pipeHandle);
 }
 
-//
-// Creates the named pipe (server side) for inbound reads,
-// then spawns a dedicated thread to wait on ConnectNamedPipe
-// and read from the pipe in a loop.
-//
-HANDLE createAsyncPipeReader()
-{
-    // Create a named pipe
-    HANDLE pipe = CreateNamedPipeW(
+// Erstellt beide Enden der Named Pipe und gibt das Client-Handle zurück
+// (Das Server-Handle wird für den Reader-Thread verwendet)
+HANDLE createPipeForProcess() {
+    // Erst die Named Pipe für das Lesen erstellen (Server-Ende)
+    HANDLE serverPipe = CreateNamedPipeW(
         L"\\\\.\\pipe\\myoutputpipe",      // pipe name
         PIPE_ACCESS_INBOUND,               // read-only
         PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT | PIPE_REJECT_REMOTE_CLIENTS,
-        1,                                 // one instance
-        0,                                 // output buffer size
-        0,                                 // input buffer size
-        0,                                 // default timeout
-        NULL                               // default security
+        1,                                 // eine Instanz
+        0,                                 // Output-Puffer-Größe
+        0,                                 // Input-Puffer-Größe
+        0,                                 // Default-Timeout
+        NULL                               // Default-Security
     );
 
-    if (pipe == INVALID_HANDLE_VALUE)
-    {
-        Logger::Log(Logger::Level::Error, "Failed to create pipe");
+    if (serverPipe == INVALID_HANDLE_VALUE) {
+        Logger::Log(Logger::Level::Error, "Failed to create server pipe");
         return nullptr;
     }
-    //Make sure the reading pipe handle is not inherited
-    SetHandleInformation(pipe, HANDLE_FLAG_INHERIT, 0);
-    // Spawn the background thread that does ConnectNamedPipe + read loop
-    std::thread t(pipeReaderThread, pipe);
-    t.detach(); // or store the thread handle somewhere if you want to join later
 
-    return pipe; // You can keep this if you need to close it outside or track it.
+    // Dann das Client-Ende erzeugen, das an den untergeordneten Prozess übergeben wird
+    SECURITY_ATTRIBUTES saAttr;
+    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+    saAttr.bInheritHandle = TRUE;          // Wichtig: Dieses Handle MUSS vererbbar sein
+    saAttr.lpSecurityDescriptor = NULL;
+
+    HANDLE clientPipe = CreateFileW(
+        L"\\\\.\\pipe\\myoutputpipe",
+        GENERIC_WRITE,
+        0,                                 // Kein Sharing
+        &saAttr,                           // Sicherheitsattribute mit Vererbung
+        OPEN_EXISTING,
+        0,                                 // Standard-Attribute
+        NULL                               // Keine Vorlage
+    );
+
+    if (clientPipe == INVALID_HANDLE_VALUE) {
+        CloseHandle(serverPipe);
+        Logger::Log(Logger::Level::Error, "Failed to create client pipe");
+        return nullptr;
+    }
+
+    // Server-Handle nicht vererben (wir wollen nicht, dass der Kindprozess es sieht)
+    SetHandleInformation(serverPipe, HANDLE_FLAG_INHERIT, 0);
+
+    // Starte den Lesethread für das Server-Ende
+    pipeReaderJThread = std::jthread(pipeReaderThread, serverPipe);
+
+    // Gib das Client-Ende zurück, das an den untergeordneten Prozess übergeben wird
+    return clientPipe;
 }
 
 std::wstring getExecutableFolderPath() {
@@ -140,11 +160,11 @@ int wmain(int argc, wchar_t* argv[])
     }
 
     // Create named pipe + reading thread FIRST if user wants console redirection
-    HANDLE pipeHandle = nullptr;
-    if (true) {
-        pipeHandle = createAsyncPipeReader();
-        if (!pipeHandle) {
-            Logger::Log(Logger::Level::Error, "Could not create pipe; continuing anyway...");
+    HANDLE clientPipeHandle = nullptr;
+    if (config.redirectConsoleOutput) {
+        clientPipeHandle = createPipeForProcess();
+        if (!clientPipeHandle) {
+            Logger::Log(Logger::Level::Error, "Could not create pipe no io redireciton possible; continuing anyway...");
         }
     }
 
@@ -153,7 +173,8 @@ int wmain(int argc, wchar_t* argv[])
     DWORD pid = createSuspendedProcessAndInject(
         config.LaunchPath,    // EXE
         passTroughArgument,   // Args
-        L"MiMallocReplacer.DLL"s  // The DLL (relative or absolute)
+        L"MiMallocReplacer.DLL"s, // The DLL (relative or absolute)
+		clientPipeHandle          //Client handle for the pipe for IO redirection
     );
 
     if (pid == 0) {

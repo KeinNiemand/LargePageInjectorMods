@@ -74,7 +74,8 @@ static std::string getLastErrorString(DWORD err) {
 export DWORD createSuspendedProcessAndInject(
     const std::wstring& applicationPath, // The EXE to launch
     const std::wstring& commandLineArgs, // Any arguments to pass
-    const std::wstring& dllPath          // Possibly relative path to the DLL
+    const std::wstring& dllPath,         // Possibly relative path to the DLL
+    HANDLE inheritedPipeHandle          // Output pipe handle to inherit (if redirectIo is true)
 )
 {
     Logger::Log(Logger::Level::Debug, L"Beginning injection procedure...");
@@ -85,25 +86,21 @@ export DWORD createSuspendedProcessAndInject(
     STARTUPINFOW si{};
     si.cb = sizeof(si);
     
-    SECURITY_ATTRIBUTES saAttr;
-    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
-    saAttr.bInheritHandle = TRUE;
-    saAttr.lpSecurityDescriptor = NULL;
+    if (inheritedPipeHandle != nullptr) {
+        si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
+        si.hStdOutput = inheritedPipeHandle;
+        si.hStdError = inheritedPipeHandle;
+        si.dwFlags |= STARTF_USESTDHANDLES;
+    }
 
-
-    HANDLE pipe = CreateFile(
-        L"\\\\.\\pipe\\myoutputpipe",
-        GENERIC_WRITE,
-        0, // no sharing
-        &saAttr, // default security attributes
-        OPEN_EXISTING,
-        0, // default attributes
-        NULL); // no template file
-
-    si.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
-    si.hStdOutput = pipe;
-    si.hStdError = pipe;
-    si.dwFlags |= STARTF_USESTDHANDLES;
+    //HANDLE pipe = CreateFile(
+    //    L"\\\\.\\pipe\\myoutputpipe",
+    //    GENERIC_WRITE,
+    //    0, // no sharing
+    //    &saAttr, // default security attributes
+    //    OPEN_EXISTING,
+    //    0, // default attributes
+    //    NULL); // no template file
 
 
     PROCESS_INFORMATION pi{};
@@ -119,7 +116,7 @@ export DWORD createSuspendedProcessAndInject(
         mutableCommandLine.data(),
         nullptr,   // default process security attributes
         nullptr,   // default thread security attributes
-        TRUE,     // do inherit handles
+        inheritedPipeHandle != nullptr,     // do inherit handles if we have an inherited pipe handle
         CREATE_SUSPENDED | HIGH_PRIORITY_CLASS, // suspended + high priority
         nullptr,   // use parent's environment block
         nullptr,   // use parent's current directory

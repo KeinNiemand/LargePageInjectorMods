@@ -127,56 +127,6 @@ void HookAllMallocFunctions(const std::string& ModuleName) {
 	HookIfSigFound(ModuleName, MiMallocReplacedFunctions::operator_new, mi_new);
 }
 
-void RedirectIO(FILE* hFrom, HANDLE hTo)
-{
-	int fd = _open_osfhandle((intptr_t)hTo, _O_WRONLY | _O_TEXT);
-	_dup2(fd, _fileno(hFrom));
-	setvbuf(hFrom, NULL, _IONBF, 0); //Disable buffering.
-}
-
-void RedirectOutputToInjectorPipe() {
-	// Connect to the named pipe
-	HANDLE pipe = CreateFile(
-		L"\\\\.\\pipe\\myoutputpipe",
-		GENERIC_WRITE,
-		0, // no sharing
-		NULL, // default security attributes
-		OPEN_EXISTING,
-		0, // default attributes
-		NULL); // no template file
-
-	if (pipe == INVALID_HANDLE_VALUE) {
-		std::cout << "MiMallocReplacer.dll: Failed to connect to pipe" << std::endl;
-	}
-
-	FreeConsole();
-	AttachConsole(ATTACH_PARENT_PROCESS);
-
-
-	FILE* fpio = new FILE();
-	if (GetStdHandle(STD_OUTPUT_HANDLE) != INVALID_HANDLE_VALUE) {
-		if (freopen_s(&fpio, "CONOUT$", "w", stdout) != NULL) {
-			fflush(stdout);
-		}
-	}
-
-	//RedirectIO(fpio, pipe);
-
-	FILE* fperr = new FILE();
-	if (GetStdHandle(STD_ERROR_HANDLE) != INVALID_HANDLE_VALUE) {
-		if (freopen_s(&fperr, "CONOUT$", "w", stderr) != NULL) {
-			fflush(stdout);
-		}
-	}
-
-	SetStdHandle(STD_OUTPUT_HANDLE, pipe);
-	SetStdHandle(STD_ERROR_HANDLE, pipe);
-	RedirectIO(fpio, pipe);
-	RedirectIO(fperr, pipe);
-	RedirectIO(stdout, pipe);
-	RedirectIO(stderr, pipe);
-}
-
 // EasyHook will be looking for this export to support DLL injection. If not found then 
 // DLL injection will fail.
  void  PerformHooks()
@@ -186,19 +136,11 @@ void RedirectOutputToInjectorPipe() {
 #ifdef DEBUG
 	Sleep(10000);
 #endif
-	//Initilise mi_malloc
-	mi_version();
 
 	Configuration config;
 	config.loadFromFile(".\\LargePageInjectorMods.toml");
-
-	//Redirect stdout to injector pipe
-	if (config.redirectConsoleOutput) {
-		RedirectOutputToInjectorPipe();
-	}
 	
 	Logger::Log(Logger::Level::Info, "MiMallocReplacer.dll: Injected, Trying to Perform Hooks for malloc functions");
-
 
 	//Perform hooks
 	for (auto moduleName : config.modulesToPatch) {
