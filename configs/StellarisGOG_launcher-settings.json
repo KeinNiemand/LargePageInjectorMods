@@ -1,0 +1,14 @@
+{
+    "browserDlcUrl": "https://www.gog.com/game/stellaris",
+    "distPlatform": "gog",
+    "exeArgs": [
+        "-gdpr-compliant"
+    ],
+    "exePath": "Injector.exe",
+    "gameDataPath": "%USER_DOCUMENTS%/Paradox Interactive/Stellaris",
+    "gameId": "stellaris",
+    "ingameSettingsLayoutPath": "settings-layout.json",
+    "rawVersion": "3.10.1",
+    "themeFile": "launcher-assets/theme-settings.json",
+    "version": "Pyxis v3.10.1 (9758)"
+}

@@ -1,0 +1,41 @@
+{
+    "alternativeExecutables": [
+        {
+            "exeArgs": [
+                "-gdpr-compliant",
+                "-nakama"
+            ],
+            "exePath": "Injector.exe",
+            "label": {
+                "de": "Shopübergreifender Mehrspielermodus",
+                "en": "Cross-Store Multiplayer",
+                "es": "Juego cruzado entre plataformas",
+                "fr": "Multijoueur multiplateforme",
+                "ja": "クロスストア・マルチプレイヤー",
+                "ko": "크로스-스토어 멀티플레이어",
+                "pl": "Gra wieloosobowa (wszystkie platformy PC)",
+                "pt": "Multijogador entre Lojas",
+                "ru": "Кроссплатформенный сетевой режим",
+                "tr": "Mağazalar Arası Multiplayer",
+                "zh-hans": "跨平台多人联机",
+                "zh-hant": "跨平台多人遊戲"
+            },
+            "visibleIn": [
+                "GAME_SETTINGS",
+                "HOME_PAGE"
+            ]
+        }
+    ],
+    "browserDlcUrl": "https://store.steampowered.com/dlc/281990/Stellaris/",
+    "distPlatform": "steam",
+    "exeArgs": [
+        "-gdpr-compliant"
+    ],
+    "exePath": "Injector.exe",
+    "gameDataPath": "%USER_DOCUMENTS%/Paradox Interactive/Stellaris",
+    "gameId": "stellaris",
+    "ingameSettingsLayoutPath": "settings-layout.json",
+    "rawVersion": "3.10.1",
+    "themeFile": "launcher-assets/theme-settings.json",
+    "version": "Pyxis v3.10.1 (9758)"
+}
