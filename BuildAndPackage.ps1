@@ -67,7 +67,8 @@ try {
   $distributions = @(
     @{ Name='Factorio';          Zip='FactorioLargePageInjector.zip';       Config='configs/Factorio_LargePageInjectorMods.toml';       Launcher=$null },
     @{ Name='StellarisGOG';      Zip='StellarisLargePageInjectorGOG.zip';   Config='configs/Stellaris_LargePageInjectorMods.toml';      Launcher='configs/StellarisGOG_launcher-settings.json' },
-    @{ Name='StellarisSteam';    Zip='StellarisLargePageInjectorSteam.zip'; Config='configs/Stellaris_LargePageInjectorMods.toml';      Launcher='configs/StellarisSteam_launcher-settings.json' }
+    @{ Name='StellarisSteam';    Zip='StellarisLargePageInjectorSteam.zip'; Config='configs/Stellaris_LargePageInjectorMods.toml';      Launcher='configs/StellarisSteam_launcher-settings.json' },
+    @{ Name='CK2';               Zip='CK2LargePageInjector.zip';            Config='configs/CK2_LargePageInjectorMods.toml';            Launcher=$null }
   )
 
   foreach ($d in $distributions) {
