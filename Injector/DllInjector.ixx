@@ -15,7 +15,7 @@ using namespace std::string_literals;
 //
 // A small RAII wrapper to close a handle automatically on scope exit.
 //
-struct HandleWrapper {
+export struct HandleWrapper {
     HANDLE handle{ nullptr };
 
     // Allows implicit construction from HANDLE
