@@ -171,7 +171,9 @@
     <Manifest />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DllInjector.ixx" />
+    <ClCompile Include="DllInjector.ixx">
+      <FileType>CppModule</FileType>
+    </ClCompile>
     <ClCompile Include="Injector.cpp" />
   </ItemGroup>
   <ItemGroup>

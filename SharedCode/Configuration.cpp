@@ -1,8 +1,8 @@
 module;
 #define WIN_WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <toml.hpp>;
-#include <filesystem>;
+#include <toml.hpp>
+#include <filesystem>
 
 module Configuration;
 import <vector>;
@@ -18,11 +18,11 @@ bool Configuration::loadFromFile(const std::string& filename)
         auto data = toml::parse(filename);
 
         // Parse LaunchPath
-        auto launchPathStr = toml::find<std::string>(data, "LaunchPath");
+        const auto& launchPathStr = toml::find<std::string>(data, "LaunchPath");
         LaunchPath = utf8_to_wstring(launchPathStr);
 
         // Parse ModulesToPatch
-        auto modules = toml::find<std::vector<std::string>>(data, "ModulesToPatch");
+        const auto& modules = toml::find<std::vector<std::string>>(data, "ModulesToPatch");
         modulesToPatch = modules;
 
         // Parse Verbosity

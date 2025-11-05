@@ -1,5 +1,5 @@
 module;
-#include "framework.h";
+#include "framework.h"
 #include <sigmatch.hpp>
 export module MallocSigmatch;
 export import <unordered_map>;

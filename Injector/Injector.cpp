@@ -1,4 +1,4 @@
-﻿#define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <thread>
 #include <iostream>
@@ -35,7 +35,7 @@ void pipeReaderThread(HANDLE pipeHandle)
 	Logger::Log(Logger::Level::Info, L"Child process connected to named pipe. Reading data...");
 
 	DWORD bytesRead = 0;
-	char buffer[1000];
+	char buffer[1000]{};
 
 	// Read loop
 	while (!g_shouldStopPipeReading.load())
@@ -82,7 +82,7 @@ HandleWrapper createPipeForProcess() {
 	}
 
 	// Dann das Client-Ende erzeugen, das an den untergeordneten Prozess übergeben wird
-	SECURITY_ATTRIBUTES saAttr;
+	SECURITY_ATTRIBUTES saAttr{};
 	saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
 	saAttr.bInheritHandle = TRUE;          // Wichtig: Dieses Handle MUSS vererbbar sein
 	saAttr.lpSecurityDescriptor = NULL;

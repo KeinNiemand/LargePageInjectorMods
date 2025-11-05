@@ -1,7 +1,7 @@
 module;
 
 export module Logger;
-export import <string>;
+import <string>;
 
 export __declspec(dllexport) class Logger {
 public:

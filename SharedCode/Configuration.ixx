@@ -1,10 +1,12 @@
 module;
 
 export module Configuration;
-export import <vector>;
-export import <string>;
-export import <map>;
+import <vector>;
+import <string>;
+import <map>;
 
+#pragma warning(push)
+#pragma warning(disable: 4251)
 
 export class __declspec(dllexport) Configuration {
 public:
@@ -20,3 +22,5 @@ public:
 private:
     std::wstring utf8_to_wstring(const std::string& str);
 };
+
+#pragma warning(pop)
