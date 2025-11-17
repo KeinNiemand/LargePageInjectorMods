@@ -190,7 +190,6 @@
   <ItemGroup>
     <None Include="..\mimalloc-override.dll" />
     <None Include="..\mimalloc-redirect.dll" />
-    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h" />
