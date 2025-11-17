@@ -73,9 +73,11 @@ void WriteAbsoluteJump64(void* absJumpMemory, void* addrToJumpTo)
 
 void InstallHook(void* func2hook, void* payloadFunction)
 {
-	DWORD oldProtect;
+	DWORD oldProtect = 0;
 	VirtualProtect(func2hook, 1024, PAGE_EXECUTE_READWRITE, &oldProtect);
 	WriteAbsoluteJump64(func2hook, payloadFunction);
+	//Set the protection back to what it was before
+	VirtualProtect(func2hook, 1024, oldProtect, &oldProtect);
 
 	//void* relayFuncMemory = AllocatePageNearAddress(func2hook);
 	//WriteAbsoluteJump64(relayFuncMemory, payloadFunction); //write relay func instructions

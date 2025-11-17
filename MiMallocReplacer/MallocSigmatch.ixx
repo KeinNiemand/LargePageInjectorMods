@@ -158,17 +158,17 @@ public:
 		sigmatch::this_process_target target;
 		sigmatch::search_result result = target.in_module(moduleName).search(functionSignatureMap[function]);
 
-		Logger::Log(Logger::Level::Warning, "MiMallocReplacer.dll: WARNING: function ("s + std::to_string(static_cast<int>(function)) + ") in module "s + moduleName + " found more than once.");
+		if (result.matches().size() > 1)
+			Logger::Log(Logger::Level::Warning, "MiMallocReplacer.dll: WARNING: function ("s + functionNameMap[function] + ") in module "s + moduleName + " found more than once.");
 
 
 		if (result.matches().size() > 0) {
-			//Just return the first match for now
 			for (const std::byte* address : result.matches()) {
 				foundAdresses.push_back((void*)address);
 			}
 		}
 		else {
-			Logger::Log(Logger::Level::Warning, "MiMallocReplacer.dll: WARNING: No matches found for function " + std::to_string(static_cast<int>(function)) + " in module: " + moduleName);
+			Logger::Log(Logger::Level::Warning, "MiMallocReplacer.dll: WARNING: No matches found for function " + functionNameMap[function] + " in module: " + moduleName);
 		}
 
 
