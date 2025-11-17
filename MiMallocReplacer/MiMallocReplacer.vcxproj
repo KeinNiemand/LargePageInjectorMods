@@ -200,6 +200,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="MallocSigmatch.ixx">
       <FileType>CppCode</FileType>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCppModule</CompileAs>
     </ClCompile>
     <ClCompile Include="PerformHooks.cpp" />
   </ItemGroup>

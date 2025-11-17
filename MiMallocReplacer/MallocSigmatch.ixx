@@ -2,9 +2,7 @@ module;
 #include "framework.h"
 #include <sigmatch.hpp>
 export module MallocSigmatch;
-export import <unordered_map>;
-export import <vector>;
-export import <string>;
+import <unordered_map>;
 import <iostream>;
 import Logger;
 
