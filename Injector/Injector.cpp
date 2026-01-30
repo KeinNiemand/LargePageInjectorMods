@@ -55,6 +55,7 @@ void pipeReaderThread(HANDLE pipeHandle)
         // Null-terminate and write to stdout
         buffer[bytesRead] = '\0';
         std::cout << buffer;
+        std::cout.flush();  // Ensure output is flushed immediately
     }
 
     Logger::Log(Logger::Level::Info, L"Pipe closed or reading stopped");
@@ -177,6 +178,15 @@ int wmain(int argc, wchar_t* argv[])
 		clientPipeHandle          //Client handle for the pipe for IO redirection
     );
 
+    // Close our copy of the client pipe handle now that the child has inherited it.
+    // If we keep it open, the pipe reader thread will block forever
+    // on ReadFile even after the child exits, because ReadFile only returns when ALL
+    // write handles to the pipe are closed.
+    if (clientPipeHandle != nullptr) {
+        CloseHandle(clientPipeHandle);
+        clientPipeHandle = nullptr;
+    }
+
     if (pid == 0) {
         Logger::Log(Logger::Level::Error, "Injection failed (returned 0). Check logs for details.");
         // If you want to stop the pipe reading thread:
@@ -200,6 +210,14 @@ int wmain(int argc, wchar_t* argv[])
 
     // When done, tell the pipe thread to stop reading
     g_shouldStopPipeReading = true;
+    
+    // Explicitly join the pipe reader thread before exiting.
+    // The thread should have already exited since the child process closed
+    // the pipe and we closed our copy of the write handle.
+    if (pipeReaderJThread.joinable()) {
+        pipeReaderJThread.join();
+    }
+    
     Logger::Log(Logger::Level::Info, "Main injector done.");
     return 0;
 }
