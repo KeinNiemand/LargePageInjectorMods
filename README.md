@@ -79,10 +79,14 @@ This mod uses the following third-party libraries:
 ### Supported Games
 - Stellaris
 - Factorio
+- Crusader Kings 2 (Experimental) - To run, extract files in the same folder as CK2 and run injector.exe to start the game. No performance tests have been made for this game.
 
 This mod has been tested for the list but might also work for other games provided they are 64 bit native apllicatiions and use the same C Runtime Library. Reports/Suggestion on Games/Application you have succefully used this on, are welcome and I might add them to the supported list.  
 Please don't report any Issues related to unsupored application that don't work unless you have a pull requests that makes them work.
 It should be compatible with all other mods for the supported games. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
+
+### Known Issues
+- **Stellaris 4.2**: Currently incompatible with this version of Stellaris.
 
 ## Configuration File Format
 
