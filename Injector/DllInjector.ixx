@@ -210,68 +210,30 @@ export DWORD createSuspendedProcessAndInject(
         return 0;
     }
 
-    Logger::Log(Logger::Level::Debug, L"Creating remote thread to call LoadLibraryW..."s + L"Address:"s + std::to_wstring((long long)loadLibraryAddr));
-    HANDLE remoteThread = CreateRemoteThread(
-        processHandle.handle,
-        nullptr,
-        0,
-        reinterpret_cast<LPTHREAD_START_ROUTINE>(loadLibraryAddr),
-        remoteMemory,
-        0,
-        nullptr
+    Logger::Log(Logger::Level::Debug, L"Queueing APC to call LoadLibraryW...");
+
+    // We use QueueUserAPC instead of CreateRemoteThread to avoid heap initialization race conditions.
+    // The APC will execute as soon as the main thread wakes up (when we call ResumeThread below).
+    DWORD apcResult = QueueUserAPC(
+        reinterpret_cast<PAPCFUNC>(loadLibraryAddr),
+        threadHandle.handle,
+        reinterpret_cast<ULONG_PTR>(remoteMemory)
     );
 
-    if (!remoteThread) {
+    if (apcResult == 0) {
         DWORD gle = GetLastError();
         std::wostringstream oss;
-        oss << L"Failed to create remote thread in target process."
+        oss << L"Failed to queue UserAPC."
             << getLastErrorString(gle).c_str();
         Logger::Log(Logger::Level::Error, oss.str());
         return 0;
     }
 
-    {
-        HandleWrapper remoteThreadHandle(remoteThread);
-        Logger::Log(Logger::Level::Debug, L"Waiting for remote thread to finish (LoadLibraryW)...");
-        DWORD waitRes = WaitForSingleObject(remoteThreadHandle.handle, INFINITE);
-        if (waitRes != WAIT_OBJECT_0) {
-            DWORD gle = GetLastError();
-            std::wostringstream oss;
-            oss << L"WaitForSingleObject on remote thread failed."
-                << getLastErrorString(gle).c_str();
-            Logger::Log(Logger::Level::Error, oss.str());
-            return 0;
-        }
+    Logger::Log(Logger::Level::Debug, L"APC queued successfully.");
 
-        // Check the exit code of the thread (return value of LoadLibraryW)
-        DWORD loadLibraryRet = 0;
-        if (GetExitCodeThread(remoteThreadHandle.handle, &loadLibraryRet)) {
-            if (loadLibraryRet == 0) {
-                Logger::Log(Logger::Level::Warning,
-                    L"Remote LoadLibraryW returned NULL. The DLL may not have loaded. "
-                    L"Check the DLL path or bitness of the process/DLL.");
-            }
-            else {
-                std::wostringstream oss2;
-                oss2 << L"Remote thread returned HMODULE=0x" << std::hex << loadLibraryRet
-                    << L" (LoadLibraryW success).";
-                Logger::Log(Logger::Level::Debug, oss2.str());
-            }
-        }
-        else {
-            DWORD gle = GetLastError();
-            std::wostringstream oss2;
-            oss2 << L"Could not retrieve remote thread exit code."
-                << getLastErrorString(gle).c_str();
-            Logger::Log(Logger::Level::Warning, oss2.str());
-        }
-    }
-
-    Logger::Log(Logger::Level::Debug, L"LoadLibraryW call complete in remote process.");
-
-    // -------------------------
-    // STEP 5: Resume the main thread so the target program can continue
-    // -------------------------
+     //-------------------------
+     //STEP 5: Resume the main thread so the target program can continue
+     //-------------------------
     Logger::Log(Logger::Level::Debug, L"Resuming main thread of the process...");
     DWORD resumeCount = ResumeThread(threadHandle.handle);
     if (resumeCount == (DWORD)-1) {

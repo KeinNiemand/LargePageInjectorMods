@@ -86,7 +86,8 @@ Please don't report any Issues related to unsupored application that don't work 
 It should be compatible with all other mods for the supported games. If you encounter any compatibility issues, please report them in the "Issues" section of this GitHub page.
 
 ### Known Issues
-- **Stellaris 4.2**: Currently incompatible with this version of Stellaris.
+- **Stellaris 4.2+**: Requires version 2.5.0 or newer of this mod (older versions beep and then the game closes).
+- **Don't set `MIMALLOC_*` environment variables system-wide**: the NVIDIA graphics driver ships its own copy of mimalloc that also reads them and will reserve its own Large Pages, wasting RAM. Set them in `LargePageInjectorMods.toml` instead, the mod hides them from the driver.
 
 ## Configuration File Format
 
