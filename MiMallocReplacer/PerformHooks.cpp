@@ -129,7 +129,25 @@ void HookAllMallocFunctions(const std::string& ModuleName) {
     HookIfSigFound(ModuleName, MiMallocReplacedFunctions::operator_new, mi_new);
 }
 
-// EasyHook will be looking for this export to support DLL injection. If not found then 
+// mimalloc.dll already read all MIMALLOC_* options during its process init (it's loaded before this dll).
+// Remove them so mimalloc copies loaded later (e.g. the NVIDIA driver links its own mimalloc) don't also reserve huge pages.
+void RemoveMimallocEnvironmentVariables() {
+    std::vector<std::wstring> names;
+    LPWCH env = GetEnvironmentStringsW();
+    for (LPWCH var = env; *var; var += wcslen(var) + 1) {
+        if (_wcsnicmp(var, L"MIMALLOC_", 9) == 0) {
+            names.emplace_back(var, wcschr(var, L'=') - var);
+        }
+    }
+    FreeEnvironmentStringsW(env);
+
+    for (const std::wstring& name : names) {
+        SetEnvironmentVariableW(name.c_str(), nullptr);
+        Logger::Log(Logger::Level::Debug, L"MiMallocReplacer.dll: Removed " + name + L" from environment");
+    }
+}
+
+// EasyHook will be looking for this export to support DLL injection. If not found then
 // DLL injection will fail.
  void  PerformHooks()
 {
@@ -149,6 +167,8 @@ void HookAllMallocFunctions(const std::string& ModuleName) {
         Logger::Log(Logger::Level::Info, "MiMallocReplacer.dll: Replacing malloc function in: " + moduleName);
         HookAllMallocFunctions(moduleName);
     }
+
+    RemoveMimallocEnvironmentVariables();
 
     //Beep and/or log if enabled
     if (config.enableBeep) {
